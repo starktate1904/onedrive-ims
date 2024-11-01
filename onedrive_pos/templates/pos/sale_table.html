@@ -1,0 +1,59 @@
+<table class="table table-striped table-bordered table-sm" id="sale-table">
+  <thead id="tHead" class="bg-light text-dark">
+    <tr>
+      <th class="text-uppercase">Product</th>
+      <th class="text-uppercase">Quantity</th>
+      <th class="text-uppercase">Price</th>
+      <th class="text-uppercase">Category</th>
+      <th class="text-uppercase">Action</th>
+    </tr>
+  </thead>
+  <tbody id="sale-table-body">
+    {% for item in sale_items %}
+    <tr>
+      <td>{{ item.product.name }}</td>
+      <td>
+        <input type="hidden" id="sale-id" value="{{ sale.id }}">
+        <input type="number" name="quantity_{{ item.product.id }}" id="quantity_{{ item.product.id }}" value="{{ item.quantity }}" min="1" max="{{item.product.quantity}}" class="form-control form-control-sm quantity-input" data-price="{{ item.product.price }}" disabled>
+      </td>
+      <td>{{ item.product.price }}</td>
+      <td>{{ item.product.category }}</td>
+      <td>
+        <a class="btn btn-sm btn-danger remove-from-sale" data-product-id="{{ item.product.id }}">
+          <i class="fas fa-trash"></i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+  
+  <style>
+    #sale-table {
+      width: fit-content;
+      font-size: 0.75rem; /* Reduce font size */
+    }
+    
+    #sale-table thead th,
+    #sale-table tbody td {
+      padding: 0.3rem; /* Reduce padding */
+    }
+    
+    #sale-table .quantity-input {
+      height: 25px; /* Reduce height */
+      font-size: 0.75rem; /* Reduce font size */
+    }
+    
+    #sale-table .remove-from-sale {
+      padding: 0.2rem 0.5rem; /* Adjust padding for button */
+      font-size: 0.75rem; /* Reduce font size for button */
+    }
+    
+    #sale-table tbody tr {
+      height: 30px; /* Set a fixed height for rows */
+    }
+    
+    #sale-table tbody tr:hover {
+      background-color: #f1f1f1; /* Change hover color for better visibility */
+    }
+  </style>

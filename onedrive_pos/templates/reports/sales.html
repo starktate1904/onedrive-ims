@@ -1,0 +1,271 @@
+{% extends 'dashboard/admin_dashboard.html' %}
+
+{% block content %}
+{% include 'scripts/main_loader.html' %}
+{% include 'scripts/messages.html' %}
+
+<!-- Page Title -->
+<div class="pagetitle">
+    <h1 class="h5 text-md font-weight-bold text-primary text-uppercase mb-1">Sales</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'auth_pos:admin_dashboard' %}"><i class="fas fa-home"></i>Home</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'auth_pos:admin_sale_list' %}"><i class="fas fa-shopping-cart"></i>All Sales</a></li>
+        </ol>
+    </nav>
+</div>
+<!-- End Page Title -->
+
+<!-- Indoc Styling -->
+<style>
+    body {
+        background-color: #f8f9fa; /* Light background for contrast */
+        font-family: 'Arial', sans-serif; /* Modern font */
+    }
+
+    .pagetitle {
+        margin: 30px 20px 20px;
+     
+   
+    }
+
+    .breadcrumb {
+        background-color: transparent; /* Transparent background for breadcrumb */
+        padding: 0; /* Remove padding */
+    }
+
+    .breadcrumb-item a {
+        color: #007bff; /* Bootstrap primary color */
+        text-decoration: none; /* Remove underline */
+    }
+
+    .breadcrumb-item a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    #cardtable {
+        margin: 20px;
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        background-color: white; /* White background for card */
+    }
+
+    #tablehead {
+        background-color: rgb(206, 96, 114);
+        color: white;
+        text-align: center; /* Center align table headers */
+    }
+
+    .inputs, .custom-select {
+        margin: 10px 5px;
+        border: 1px solid #bd4242;
+        padding: 10px; /* Increased padding for inputs */
+        border-radius: 5px;
+        transition: border-color 0.3s; /* Smooth transition for border color */
+    }
+
+    .inputs:focus, .custom-select:focus {
+        border-color: #007bff; /* Change border color on focus */
+        outline: none; /* Remove default outline */
+    }
+
+    .btn {
+        margin-top: 5px;
+        border-radius: 5px; /* Rounded button corners */
+        transition: background-color 0.3s; /* Smooth transition for button */
+    }
+
+    .btn-primary {
+        background-color: rgb(206, 96, 114); /* Custom primary color */
+        border: none; /* Remove border */
+    }
+
+    .btn-primary:hover {
+        background-color: #bd4242; /* Darker shade on hover */
+    }
+
+    .table-responsive {
+        margin-top: 20px; /* Space above the table */
+    }
+
+    .table {
+        border-collapse: collapse; /* Remove space between table cells */
+        width: 100%; /* Full width */
+    }
+
+    .table th, .table td {
+        padding: 12px; /* Increased padding for table cells */
+        text-align: left; /* Left align text */
+        border-bottom: 1px solid #ddd; /* Light border for rows */
+    }
+
+    .table th {
+        background-color: rgb(206, 96, 114); /* Header background */
+        color: white; /* Header text color */
+    }
+
+    .table tr:hover {
+        background-color: #f1f1f1; /* Highlight row on hover */
+    }
+
+    .pagination {
+        justify-content: center; /* Center pagination */
+        margin-top: 20px; /* Space above pagination */
+    }
+
+    .page-item .page-link {
+        border-radius: 5px; /* Rounded pagination links */
+        margin: 0 2px; /* Space between pagination items */
+    }
+
+    .page-item.active .page-link {
+        background-color: rgb(206, 96, 114); /* Active page color */
+        color: white; /* Active page text color */
+    }
+
+    .page-item .page-link:hover {
+        background-color : #bd4242; /* Darker shade on hover */
+    }
+</style>
+
+<!-- Sales List -->
+<section class="section profile">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-left-success shadow h-100 py-2" id="cardtable">
+                <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="{% url 'auth_pos:admin_sale_list' %}">All Sales</a>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Topbar Search -->
+                            <form method="get" class="d-flex flex-wrap align-items-center my-2">
+                                <select name="date_filter" class="custom-select">
+                                    <option value="">All Dates</option>
+                                    <option value="today" {% if date_filter == 'today' %}selected{% endif %}>Today</option>
+                                    <option value="yesterday" {% if date_filter == 'yesterday' %}selected{% endif %}>Yesterday</option>
+                                    <option value="last_week" {% if date_filter == 'last_week' %}selected{% endif %}>Last Week</option>
+                                    <option value="last_month" {% if date_filter == 'last_month' %}selected{% endif %}>Last Month</option>
+                                </select>
+                                <input type="number" class="inputs" id="total_amount_filter" name="total_amount_filter" placeholder="Enter amount" value="{{ total_amount_filter }}">
+                                <input type="text" class="inputs" id="sale_item_filter" name="sale_item_filter" placeholder="Enter sale item name" value="{{ sale_item_filter }}">
+                                <input type="text" class="inputs" id="branch_filter" name="branch_filter" placeholder="Enter branch name" value="{{ branch_filter }}">
+                                <button type="submit" class="btn btn-primary" id="filter">Filter</button>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#" id="generate-report" class="btn btn-primary btn-icon-split">
+                                <span class="icon text-white-50">
+                                    <i class="fas fa-file-pdf"></i>
+                                </span>
+                                <span class="text">Generate Report</span>
+                            </a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-overview border-left-danger shadow h-100 py-2" id="products-overview">
+                            <div class="card-body">
+                                <div class="table-responsive table-borderless table-hover table-responsive-sm table-responsive-md table-responsive-lg table-striped">
+                                    <table class="table table-hover" id="dataTable" width="100%" cellspacing="1">
+                                        <thead id="tablehead">
+                                            <tr>
+                                                <th>ID <i class="fas fa-hashtag"></i></th>
+                                                <th>Date <i class="fas fa-calendar-alt"></i></th>
+                                                <th>Sale Item <i class="fas fa-shopping-basket"></i></th>
+                                                <th>Total Amount <i class="fas fa-dollar-sign"></i></th>
+                                                <th>Cashier <i class="fas fa-user"></i></th>
+                                                <th>Branch <i class="fas fa-building"></i></th>
+                                            </tr>
+                                        </thead>
+                                        {% if sales %}
+                                        <tbody>
+                                            {% for sale in sales %}
+                                            <tr>
+                                                <td>{{ sale.id }}</td>
+                                                <td>{{ sale.date_created }}</td>
+                                                <td>
+                                                    <ul>
+                                                    {% for sale_item in sale.saleitem_set.all %}
+                                                    <li>{{ sale_item.product.name }} x {{ sale_item.quantity }} ({{ sale_item.price }})</li>
+                                                    {% endfor %}
+                                                    </ul>
+                                                </td>
+                                                <td>{{ sale.total_amount }}</td>
+                                                <td>{{ sale.cashier.user.first_name }}</td>
+                                                <td>{{ sale.branch.name }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        {% else %}
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6" class="text-center">
+                                                    No Sales Found
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        {% endif %}
+                                    </table>
+                                </div>
+
+                                <nav aria-label="Page navigation example" class="mt-4">
+                                    <div class="d-flex justify-content-center">
+                                        <ul class ="pagination">
+                                            {% if sales.has_previous %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ sales.previous_page_number }}&date_filter={{ date_filter }}&total_amount_filter={{ total_amount_filter }}&sale_item_filter={{ sale_item_filter }}&product_filter={{ product_filter }}&cashier_filter={{ cashier_filter }}&branch_filter={{ branch_filter }}">Previous</a>
+                                            </li>
+                                            {% endif %}
+                                
+                                            <li class="page-item disabled">
+                                                <span class="page-link">Page {{ sales.number }} of {{ sales.paginator.num_pages }}</span>
+                                            </li>
+                                
+                                            {% if sales.has_next %}
+                                            <li class="page-item">
+                                                <a class="page-link" href="?page={{ sales.next_page_number }}&date_filter={{ date_filter }}&total_amount_filter={{ total_amount_filter }}&sale_item_filter={{ sale_item_filter }}&product_filter={{ product_filter }}&cashier_filter={{ cashier_filter }}&branch_filter={{ branch_filter }}">Next</a>
+                                            </li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+                    </div><!-- End Bordered Tabs -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Sales List -->
+
+
+<!-- Add JavaScript code to trigger the report generation -->
+ {% block javascripts %}
+<script>
+    $(document).ready(function() {
+        $('#generate-report').on('click', function(event) {
+            event.preventDefault(); // Prevent the default action
+            // Construct the URL with current filter parameters
+            const dateFilter = $('select[name="date_filter"]').val();
+            const totalAmountFilter = $('#total_amount_filter').val();
+            const saleItemFilter = $('#sale_item_filter').val();
+            const branchFilter = $('#branch_filter').val();
+
+            const url = '{% url "pos:generate_sales_report" %}?date_filter=' + dateFilter +
+                        '&total_amount_filter=' + totalAmountFilter +
+                        '&sale_item_filter=' + saleItemFilter +
+                        '&branch_filter=' + branchFilter;
+
+            // Open the report in a new tab
+            window.open(url, '_blank');
+        });
+    });
+</script>
+{% endblock javascripts %}
+
+
+{% endblock content %}

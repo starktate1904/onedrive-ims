@@ -1,0 +1,296 @@
+{% extends 'dashboard/admin_dashboard.html' %}
+{% block content %}
+
+
+{% include 'scripts/main_loader.html' %}
+{% include 'scripts/messages.html' %}
+
+
+
+<!-- page title -->
+<div class="pagetitle">
+    <h1 class="h5 text-md font-weight-bold text-primary text-uppercase mb-1">Branches</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'auth_pos:admin_dashboard' %}"><i class="fas fa-home"></i>Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'branches:branch_list' %}"><i class="fas fa-building"></i>Branches</a></li>
+      </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+
+
+
+
+<style>
+
+    .breadcrumb{
+
+        background-color: white;
+        border-radius: 30px;
+    }
+
+    .pagetitle{
+        margin-top: 40px;
+        margin-right: 20px;
+        margin-left: 20px;
+        
+
+
+    }
+    #noBranchCard{
+
+        border-radius: 30px;
+        margin-bottom: 20px;
+
+
+    }
+
+
+
+    #branchMainCard{
+
+        margin-bottom: 30px;
+        border-radius: 30px;
+        margin-left: 20px;
+        margin-right: 20px;
+        
+
+
+    }
+    #BranchCard{
+
+        margin-top: 30px;
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+
+    }
+    #addbranchBtn{
+
+        
+        margin-right: 30px;
+        margin-left: 30px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+        
+
+
+    }
+ 
+    .btn{
+      margin-top: 5px;
+      
+
+    }
+
+
+  
+  
+#navbarSearch{
+      margin-top: 5px;
+      margin-left: 2px
+    }
+.nav-item{
+      margin-right: 5px;
+}
+#tablehead{
+  
+      background-color: rgb(206, 96, 114);
+      color: white
+}
+#productqty{
+      font-size: large;
+}
+#product_name{
+      border-radius: 60px;
+}
+.user{
+border-radius: 30px;
+    }
+
+
+   
+#branchfooter{
+
+    justify-items: center;
+    
+
+    align-content: center;
+  }
+#edittitle{
+
+  margin-left: 5px;
+}
+  
+   
+
+</style>
+<!-- end styling -->
+
+
+
+
+
+<!-- branch list in cards -->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+<div class="card  border-left-success shadow h-100 py-2" id="branchMainCard">
+  <div id="branchlistbtns">
+    <a href="#"  data-bs-toggle="modal" id="addbranchBtn" data-bs-toggle="modal" data-bs-target="#branchModal" class="btn btn-primary btn-icon-split">
+      <span class="icon text-white-50">
+          <i class="fas fa-plus"></i>
+      </span>
+      <span class="text">Branch</span>
+  </a>
+  </div>
+  {% if  not branches %}
+  <div class="col-lg-12">
+    <div class="card bg-warning" id="noBranchCard">
+      <div class="card-body">
+        <h5 class="card-title">No Branches found!</h5>
+        <p class="card-text">You can add a new branch by clicking on the "<b><i class="fas fa-plus"></i>Add Branch</b>" button.</p>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="row">
+    {% for branch in branches %}
+      <div class="col-xl-3 col-md-6 mb-4" id="BranchCard">
+        <div class="card border-left-danger shadow h-100 py-2">
+          <div class="card-body">
+            <div class="row no-gutters align-items-center">
+              <div class="col mr-2">
+                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Name: <b>{{ branch.name }}</b></div>
+                <div class="h5 mb-0 font-weight-bold text-black-800">location: <b>{{ branch.location }}</b></div>
+              </div>
+              <div class="col-auto">
+                <i class="fas fa-building fa-2x text-black-300"></i>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer " id="branchfooter">
+            <a href="{% url 'branches:branch_products' branch.id %}"  class="btn btn-success btn-sm" >Inventory</a>
+            <a href="{% url 'branches:branch_update' branch.id %}" data-bs-toggle="modal" data-bs-target="#editBranch-{{forloop.counter}}" class="btn btn-warning btn-sm">Edit</a>
+            <a href="{% url 'branches:branch_delete' branch.id %}" data-bs-toggle="modal" data-bs-target="#deleteBranch-{{forloop.counter}}" class="btn btn-danger btn-sm">Delete</a>
+         
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+</div>
+<!-- end branch list -->
+
+
+
+
+
+
+
+<!-- branch creation modal -->
+<div class="modal fade" id="branchModal" tabindex="-1" >
+      <div class="modal-dialog  modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content  border-left-danger shadow  py-2">
+          <div class="modal-header text-center justify-content-center">						
+            <h4 class="modal-title justify-content-center text-center "><span class="badge badge-primary">Add Branch</span></h4>
+            <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+        </div>
+          <!-- branch creation form -->
+          <div class="modal-body"  >
+            <form class="user" method="POST" action="{% url 'branches:branch_create' %}" id="branchform">
+                {% csrf_token %}
+                    
+                <div class="modal-body">		
+                    <div class="form-group">
+                        <label>Branch Name</label>
+                        <input type="text" class="form-control floating-input" name="name"  required>
+                        
+                    </div>
+                    <div class="form-group">
+                      <label>Branch Location</label>
+                      <input type="text" class="form-control floating-input" name="location"  required>
+                     
+                  </div> 
+                </div>   
+            </form>
+          </div>
+          <div class="modal-footer text-center justify-content-center"  >
+            <button  class="btn btn-primary btn-user " type="submit"  form="branchform">
+              Create Branch
+          </button>  
+            <button type="button" class="btn btn-danger " data-bs-dismiss="modal">
+              Close</button>
+          </div>
+        </div>
+      </div>
+</div>
+<!-- end branch creation modal -->
+
+
+
+<!-- Edit branch Modal HTML -->
+ {% for branch in branches %}
+<div id="editBranch-{{forloop.counter}}" class="modal fade">
+    <div class="modal-dialog  modal-sm modal-dialog-centered">
+        <div class="modal-content  border-left-danger shadow  py-2">
+            <form method="POST" action="{% url 'branches:save_update_branch'  %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-header justify-content-center text-center">						
+                    <h4 class="modal-title " id="edittitle"><span class="badge badge-success">Update <br> <b>{{branch.name}}'s <br> Details</b></span></h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">					
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control floating-input" name="name" value="{{ branch.name }}" required>
+                        <input type="text" class="form-control" name="id" value="{{ branch.id }}" hidden>
+                    </div>
+                    <div class="form-group">
+                        <label>Location</label>
+                        <input type="text" class="form-control floating-input"  name='location' value="{{ branch.location }}" required>
+                    </div>			
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <input type="button" class="btn btn-primary" data-bs-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-info" value="Save" >
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<!-- end edit branch modal -->
+
+
+<!-- Delete Branch Modal HTML -->
+{% for branch in branches %}
+<div id="deleteBranch-{{forloop.counter}}" class="modal fade">
+    <div class="modal-dialog modal-dialog-centered  modal-sm ">
+        <div class="modal-content  border-left-danger shadow  py-2">
+            <form action="{% url 'branches:branch_delete' branch.id %}" method="post">
+                {% csrf_token %}
+                <div class="modal-header justify-content-center">						
+                    <h4 class="modal-title"><span class="badge badge-warning">Delete <br><b>{{branch.name}} </b></span></h4>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body text-center">					
+                    <p>Are you sure you want to delete this branch</p>
+                    <p class="text-warning text-center"><small>This action cannot be undone.</small></p>
+                </div>
+                <div class="modal-footer text-center justify-content-center">
+                    <input type="button" class="btn btn-primary" data-bs-dismiss="modal" value="Cancel">
+                    <input type="submit" class="btn btn-danger" value="Delete">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+<!-- end delete branch modal -->
+
+
+  
+
+{% endblock content%}

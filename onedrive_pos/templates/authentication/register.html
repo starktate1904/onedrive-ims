@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <title>Register</title>
+
+    {% load static %}
+    {% include 'scripts/links.html' %}
+    {% include 'scripts/scripts.html' %}
+
+    <style>
+        .card {
+            max-width: 400px;
+            margin: 40px auto;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 10px;
+        }
+    </style>
+
+    {% include 'scripts/main_loader.html' %}
+    {% include 'scripts/messages.html' %}
+</head>
+
+<body class="bg-gradient-light">
+    <div class="container">
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <div class="row">
+                    <div class="col-md-8 col-xl-12">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Staff Signup @OneDrive!</h1>
+                            </div>
+                            <form class="user" method="POST" action="{% url 'auth_pos:register' %}">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    <label for="userName">Username</label>
+                                    <input type="text" class="form-control form-control-user" id="userName"
+                                        placeholder="Username" name="username" required>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="exampleInputEmail">Email Address</label>
+                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
+                                        placeholder="Email Address" name="email" required>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="exampleInputPassword">Password</label>
+                                        <input type="password" class="form-control form-control-user"
+                                            id="exampleInputPassword" placeholder="Password" name="password" required>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <label for="exampleRepeatPassword">Repeat Password</label>
+                                        <input type="password" class="form-control form-control-user"
+                                            id="exampleRepeatPassword" placeholder="Repeat Password" name="password_repeat" required>
+                                    </div>
+                                </div>
+                                <button class="btn btn-danger btn-user btn-block" type="submit">Register</button>
+                                
+                                <hr>
+                            </form>
+                            <hr>
+                            <div class="text-center">
+                                <a class="small" href="{% url 'auth_pos:login' %}">Already have an account? Login!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

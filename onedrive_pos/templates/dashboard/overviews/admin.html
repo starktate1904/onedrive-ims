@@ -1,0 +1,487 @@
+{% block content %}
+{% load static %}
+
+ <!-- Page Heading -->
+<div class="d-sm-flex align-items-center justify-content-between mb-6" id="pageheading">
+   
+    <div class="d-flex align-items-center">
+      
+        <h1 class="h3 mb-0 text-black-900 ml-3  text-uppercase" id="greeting">{{ greeting}} {{ user.first_name }}</h1>
+    
+        <p class="h3 mb-0 text-black-900 ml-3  text-uppercase " id="today">Today is <b>{{ today }}</b></p>
+
+        
+       
+
+</div>
+ 
+    
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Earnings (Monthly) Card  -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <a href="{% url 'branches:branch_list' %}">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                            Avg Earning per Month</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{avg_month}} $</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div>
+    </div>
+
+    <!-- Earnings (Annua) Card  -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                            Earnings (Annual)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{annual_earnings}} $</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+     <!-- sales Card  -->
+     <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-success shadow h-100 py-2">
+            <a href="{% url 'auth_pos:admin_sale_list'  %}">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                             Total Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_sales}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-balance-scale fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div>
+    </div>
+
+
+    
+    <!-- Revenue Card -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Revenue
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_revenue}}</div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+   
+</div>
+
+<!-- container row -->
+<div class="row">
+
+   <!-- Branches Card  -->
+<div class="col-xl-3 col-md-6 mb-5">
+    <div class="card border-left-success shadow h-100 py-2">
+        <a href="{% url 'branches:branch_list' %}">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                         OneDrive Branches</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{branches_count}}</div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-building fa-2x text-black-400"></i>
+                </div>
+            </div>
+        </div>
+    </a>
+    </div>
+</div>
+
+<!-- Employees Card -->
+<div class="col-xl-3 col-md-6 mb-5">
+    <div class="card border-left-info shadow h-100 py-2">
+        <a href="{% url 'staffs:employee_list'  %}">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-info text-uppercase mb-1">All Employees
+                    </div>
+                    <div class="row no-gutters align-items-center">
+                        <div class="col-auto">
+                            <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{employee_count}}</div>
+                        </div>
+                       
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-people-carry fa-2x text-black-400"></i>
+                </div>
+            </div>
+        </div>
+    </a>
+    </div>
+</div>
+
+<!-- Products-->
+<div class="col-xl-3 col-md-6 mb-5">
+    <div class="card border-left-warning shadow h-100 py-2"> 
+        <a href="{% url 'products:product_list'  %}">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                        Products</div>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">{{products_count}}</div>
+                </div>
+                <div class="col-auto">
+                    <i class="fas fa-car fa-2x text-black-400"></i>
+                </div>
+            </div>
+        </div>
+        
+    </a>
+       
+    </div >
+</div>
+
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-8 col-lg-8">
+        <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-left-primary ">
+                <h6 class="m-0 font-weight-bold text-primary">Month Earnings Overview</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Low Stock Card -->
+<div class="col-xl-4 col-lg-5 col-md-6 col-sm-12">
+    <div class="card shadow mb-4 border border-warning">
+        <!-- Card Header -->
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-bottom">
+            <h6 class="m-0 font-weight-bold text-warning">Low Stock Products</h6>
+        </div>
+        <div class="card-body">
+            <div class="list-group">
+                {% for product in low_stock_products %}
+                <a href="#" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center border border-warning mb-2 rounded">
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-car fa-2x me-3 text-warning"></i>
+                        <div>
+                            <div class="fw-bold">{{ product.make }}</div>
+                            <small class="text-muted">{{ product.name }}</small>
+                        </div>
+                    </div>
+                    <span class="badge bg-danger text-white rounded-pill">{{ product.quantity }}</span>
+                </a>
+                {% empty %}
+                <div class="alert alert-success text-center" role="alert">
+                    No products with low stock.
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+</div>
+
+<!-- Content Row -->
+<div class="row" id="salestable">
+
+    <!-- Sales |Table  -->
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4 ">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between border-left-danger shadow py-2">
+                <h6 class="m-0 font-weight-bold text-success">Sales</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="card-title m-0 font-weight-bold text-primary">Recent Sales <span>| Today <span class="badge badge-success">{{ today_sales_count }}</span></h6>
+                
+                <table class="table table-borderless  table-responsive datatable table-active tab">
+                    <thead id="tablehead " >
+                        <tr>
+                            <th scope="col"><i class="fas fa-hashtag text-black-400"></i></th>
+                            <th scope="col"><i class="fas fa-building text-black-400"></i></th>
+                            <th scope="col"><i class="fa fa-cubes text-black-400"></i></th>
+                            <th scope="col"><i class="fa fa-id-card text-black-400"></i></th>
+                            <th scope="col"><i class="fas fa-dollar-sign text-black-400"></i></th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        {% if today_sales %}
+                            {% for sale in today_sales %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ sale.branch }}</td>
+                                <td>
+                                    <ul>
+                                        {% for sale_item in sale.saleitem_set.all %}
+                                        <li>{{ sale_item.product.name }} x {{ sale_item.quantity }} ({{ sale_item.price }})</li>
+                                        {% endfor %}
+                                    </ul>
+                                </td>
+                                <td>{{ sale.cashier.user.first_name }}</td>
+                                <td>{{ sale.total_amount }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" class="text-center">No Sales Found!
+                                    <h5><span class="badge bg-warning"><b>Oops Looks Like Today's Business was a bit harsh.</b></span></h5>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notification-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Notifications</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!-- Notification messages will go here -->
+          <ul id="notification-list">
+            <div class="card-body">
+                   
+        
+                <!-- List group with custom content -->
+                {% for notification in notifications %}
+                <ol class="list-group list-group-numbered">
+                  <li class="list-group-item d-flex justify-content-between align-items-start list-group-item-warning"><i class="fas fa-bell fa-2x text-black-400"></i>
+                    <div class="ms-2 me-auto">
+                        <a href="{% url 'auth_pos:mark_as_read' notification.id %}">
+                            <button class="btn btn-sm btn-danger mark-as-read" >Mark as Read</button></a>
+                       
+                      <div class="fw-bold">{{ notification.timestamp }}</div>
+                      {{ notification.message }}
+                      
+                    </div>
+                  </li>
+                </ol><!-- End with custom content -->
+                {% empty %}
+                <ol class="list-group list-group-numbered">
+                  <li class="list-group-item d-flex justify-content-between align-items-start list-group-item-success">
+                      <p> 0 Notifications </p>
+                    
+                  </li>
+                </ol><!-- End with custom content -->
+                {% endfor %}
+
+              </div>
+            
+
+            <!-- List of notifications -->
+          </ul>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          </div>
+      </div>
+     
+    </div>
+</div>
+
+
+<script>
+    // Toggle notification modal
+document.getElementById('notification-bell').addEventListener('click', function() {
+    $('#notification-modal').modal('toggle');
+  });
+   
+</script>
+
+
+
+
+<style> 
+    a:hover {
+        color: rgb(199, 124, 124);
+        
+        
+      }
+      
+    
+    a{
+        color: rgb(141, 138, 138);
+        
+    }
+    .product-make{
+        font-size: medium;
+        color: rgb(199, 124, 124);
+        font-style: bold;
+        margin-right: 50px;
+    }
+    .product-label{
+        font-size: medium;
+        margin-right: 40px;
+    }
+    .product-content{
+        font-size: medium;
+        margin-left: 40px;
+    }
+    #tablehead {
+        background-color: rgb(206, 96, 114);
+        color: white;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+        position: relative;
+      }
+      
+      #tablehead::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+        border-radius: 10px 10px 0 0;
+        z-index: -1;
+      }
+      
+      #tablehead th {
+        font-weight: bold;
+        font-size: 16px;
+        padding: 10px;
+        text-align: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+      }
+      
+      #tablehead th:first-child {
+        border-radius: 10px 0 0 0;
+      }
+      
+      #tablehead th:last-child {
+        border-radius: 0 10px 0 0;
+      }
+    .profile-picture {
+ 
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+      }
+    #greeting{
+        color:  rgb(96, 129, 206);
+        margin-right: 10px;
+
+    }
+    #today{
+        color: rgb(96, 129, 206);
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    #pageheading{
+        margin-left: 10%;
+        margin-top: 20px;
+        margin-right: 10px;
+       
+    }
+
+    .nav-item{
+        font-size: larger;
+    
+    
+    }
+    .card{
+        border-radius: 30px;
+    }
+    #pheading{
+        margin-top: 30px;
+    }
+    #salestable{
+        margin-bottom: 20px;
+    }
+ 
+
+    
+    
+    
+
+</style>
+
+
+<!--Chart JS-->
+<script src="{% static 'chart.js/Chart.min.js' %}"></script>
+<!--Monthly earnings variable-->
+<input type="hidden" id="monthly_earnings"  value="{{monthly_earnings|safe}}">
+
+<!--Chart area-->
+<script src="{% static 'chart.js/admin_chart_area.js' %}"></script>
+
+
+
+
+
+
+{% endblock content %}

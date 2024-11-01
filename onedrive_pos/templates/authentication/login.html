@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Login</title>
+    {% load static %}
+    {% include 'scripts/links.html' %}
+    {% include 'scripts/main_loader.html' %}
+    {% include 'scripts/messages.html' %}
+</head>
+
+<body class="bg-white">
+
+
+    <style>
+        .card {
+            max-width: 400px; /* adjust the max width to fit your needs */
+            margin: 40px auto; /* center the card horizontally */
+        }
+
+        @media only screen and (max-width: 768px) {
+            .card {
+                max-width: 300px; /* adjust the max width for smaller screens */
+            }
+        }
+    </style>
+
+    <div class="container">
+        <!-- Outer Row -->
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6 col-xl-5"> <!-- adjust the column sizes to fit your needs -->
+                <div class="card o-hidden border-0 shadow-lg my-5 border-left-danger shadow py-2">
+                    <div class="card-body p-0">
+                        <!-- Nested Row within Card Body -->
+                        <div class="row">
+                            <div class="col-md-8 col-xl-12">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-black-900 mb-4">Welcome Back!</h1>
+                                    </div>
+                                    <form class="user" method="POST" action="{% url 'auth_pos:login' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="userName">Username</label>
+                                            <input type="text" class="form-control form-control-user" id="userName"
+                                                placeholder="Username" name="username" required>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="exampleInputPassword">Password</label>
+                                            <input type="password" class="form-control form-control-user" name="password"
+                                                id="exampleInputPassword" placeholder="Password" required>
+                                        </div>
+                                      
+                                        <button class="btn btn-danger btn-user btn-block" type="submit">
+                                            Login
+                                        </button>
+
+                                        <hr>
+
+                                        <div class="text-center">
+                                            <a class="small" href="{% url 'auth_pos:register' %}">Create an Account!</a>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+ </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {% include 'scripts/scripts.html' %}
+</body>
+
+
+</html>

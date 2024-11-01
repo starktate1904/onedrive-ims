@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+
+    <title>Lockscreen</title>
+    {% load static %}
+    {% include 'scripts/links.html' %}
+    {% include 'scripts/scripts.html' %}
+
+    <style>
+        .profile-picture {
+            margin-top: 20px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%; /* Make it circular */
+        }
+        .lockscreen-container {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    {% include 'scripts/messages.html' %}
+    <div class="container lockscreen-container">
+        <div class="row justify-content-center">
+            <div class="col-xl-10 col-lg-12 col-md-9">
+                <div class="card o-hidden border-0 shadow-lg my-5 border-left-danger">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-block bg-login-image text-center">
+                                {% if profile_picture.profile_pic %}
+                                    <img src="{{ profile_picture.profile_pic.url }}" alt="Profile" class="profile-picture">
+                                {% else %}
+                                    <img src="{% static 'img/undraw_profile_2.svg' %}" alt="Default Profile Picture" class="profile-picture">
+                                {% endif %}
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h1 class="h4 text-black-900 mb-4">Lockscreen</h1>
+                                    </div>
+                                    <form class="user" method="POST" action="{% url 'auth_pos:lock_screen' %}">
+                                        {% csrf_token %}
+                                        <div class="form-group">
+                                            <label for="username">Username</label>
+                                            <input type="text" class="form-control form-control-user" name="username" id="username" placeholder="Username" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password">Password</label>
+                                            <input type="password" class="form-control form-control-user" name="password" id="password" placeholder="Password" required>
+                                        </div>
+                                        <button class="btn btn-danger btn-user btn-block" type="submit">
+                                            <i class="fas fa-lock-open"></i> Unlock
+                                        </button>
+                                        <hr>
+                                    </form>
+                                    <hr>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

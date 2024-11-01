@@ -1,0 +1,409 @@
+{% extends 'dashboard/manager_dashboard.html' %}
+{% block content %}
+
+
+
+{% include 'scripts/main_loader.html' %}
+
+{% include 'scripts/messages.html' %}
+<div class="pagetitle">
+    <h1  class=" h5 text-md font-weight-bold text-primary text-uppercase mb-1">Employees in {{ request.user.employee.branch.name }}</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'auth_pos:manager_dashboard' %}"><i class="fas fa-home"></i>Home</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'branches:view_branch_employees' %}"><i class="fas fa-users"></i>Employees</a></li>
+      </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+
+
+
+<style>
+  .custom-control {
+    padding: 10px;
+  }
+  
+  .custom-control-input {
+    margin-right: 10px;
+  }
+  
+  .custom-control-label {
+    font-size: 16px;
+    color: #666;
+  }
+    .breadcrumb{
+
+        background-color: white;
+        border-radius: 30px;
+    }
+
+    .pagetitle{
+        
+        margin-top: 20px;
+        margin-right: 20px;
+        margin-left: 20px;
+        
+
+
+    }
+    #employeeMainCard{
+
+        margin-bottom: 30px;
+        border-radius: 30px;
+        margin-left: 20px;
+        margin-right: 10px;
+
+    }
+    #employeeCard{
+
+        margin-top: 30px;
+        margin-left: 30px;
+        margin-right: 30px;
+        margin-bottom: 30px;
+
+    }
+   
+    #noMemberCard{
+
+        border-radius: 30px;
+        margin-bottom: 20px;
+
+
+    }
+    input[type="text"] {
+        margin-bottom: 10px;
+        margin-right: auto;
+        
+        margin-top: auto;
+        width: auto;
+        
+        /* Styles for text input elements */
+    }
+    
+    input[type="number"] {
+      margin-bottom: 10px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-top: auto;
+      width: fit-content;
+      
+      /* Styles for text input elements */
+    }
+    input[type="password"] {
+        margin-bottom: 10px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: auto;
+        width: fit-content;
+        
+        /* Styles for text input elements */
+      }
+      input[type="email"] {
+        margin-bottom: 10px;
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: auto;
+        width: fit-content;
+        
+        /* Styles for text input elements */
+      }
+    input[type="option"] {
+      margin-bottom: 10px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-top: auto;
+      width: fit-content;
+      
+      /* Styles for text input elements */
+    }
+    input[type="file"] {
+      margin-bottom: 10px;
+      margin-right: auto;
+      margin-left: auto;
+      margin-top: auto;
+      color: #333;
+      width: fit-content;
+      
+      /* Styles for text input elements */
+    }
+     
+
+  .form-control {
+    border: 0;
+    border-bottom: 1px solid rgb(206, 96, 114);
+    border-radius: 0;
+    padding: 8px;
+    margin-left: auto;
+    
+}
+.form-control:focus {
+    
+    box-shadow: none;
+}
+
+.floating-input {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.floating-input:focus, .floating-input:not(:placeholder-shown) {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.floating-input:not(:placeholder-shown) + label {
+    position: absolute;
+    top: -12px;
+    left: 0;
+    font-size: 80%;
+    color: #777;
+}
+
+label {
+    margin-left:40px;
+    
+    font-weight: bold;
+    color: #333;
+}
+.custom-select {
+    /* Your styles here */
+    border: 1px solid #bd4242;
+    padding: 5px;
+    border-radius: 10px;
+    width: auto;
+    margin-left: 20px;
+    
+  }
+  .custom-select:focus {
+    border: 0;
+      border-bottom: 1px solid rgb(206, 96, 114);
+      border-radius: 0;
+      padding: 8px;
+    
+  }
+  .btn{
+    margin-top: 5px;
+    
+
+  }
+
+
+   
+
+</style>
+
+
+<!-- employee list -->
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="card border-left-success  py-2" id="employeeMainCard">
+        {% if not employees %}
+        <div class="col-lg-12">
+            <div class="card bg-warning" id="noMemberCard">
+              <div class="card-body">
+                <h5 class="card-title">No Employees found!</h5>
+                <p class="card-text">Please Contact The Admin</p>
+              </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="row">
+            {% for employee in employees %}
+                <div class="col-xl-2 col-md-6 mb-4" id="employeeCard">
+                    <div class="card border-left-danger shadow  py-2">
+                        <div class="card-body">
+                            <div class="row no-gutters align-items-center">
+                                <div class="col mr-2">
+                                    <div class="h6 mb-0 font-weight-bold text-black-800 text-primary text-uppercase mb-1"><i class="fas fa-user  text-black-300"></i>  Name:  
+                                       <b>{{employee.user.username}}</b></div>
+                                    <div class="h6 mb-0 font-weight-bold text-black-800">Role:  <span class="badge badge-success"><b>{{employee.user.role}}</b></span>  </div><br>
+                                    <div class="h6 mb-0 font-weight-bold text-black-800">At:      <b>{{employee.branch.name}}</b></div><br>
+                                    <div class="h6 mb-0 font-weight-bold text-black-800">Email:   <b>{{employee.user.email}}</b></div><br>
+                                </div>
+                            </div>
+                            <div class="card-footer  text-center">
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#viewDetailsModal-{{forloop.counter}}">Details</button>
+                                <a href="{% url 'staffs:employee_update' employee.id %}" data-bs-toggle="modal" data-bs-target="#editemployee-{{forloop.counter}}"  class="btn btn-warning btn-sm">Edit</a>
+                                <a href="{% url 'staffs:employee_delete' employee.id %}" data-bs-toggle="modal" data-bs-target="#deleteemployee-{{forloop.counter}}"  class="btn btn-danger btn-sm">Delete</a>
+                            <div class="modal fade" id="viewDetailsModal{{ employee.id }}" tabindex="-1" aria-labelledby="viewDetailsModalLabel" aria-hidden="true"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+    
+        {% endif %}
+        
+        <div class="row">
+        
+            <div class="col-lg-6">
+        
+            </div>
+    
+            <div class="col-lg-6">
+        
+               
+                   
+               
+        
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- End employee list -->
+
+
+
+ <!-- View Employee Details Modal -->
+ {% for employee in employees %}
+ <div class="modal fade" id="viewDetailsModal-{{forloop.counter}}" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content border-left-success shadow py-2">
+          <div class="modal-header">
+              <h4 class="modal-title text-center"><span class="badge badge-success">Employee Details: {{ employee.user.username }}</span></h4>
+              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-user-circle"></i> Firstname:</h5>
+                <p>{{ employee.user.first_name }}</p>
+              </div>
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-user-circle"></i> Lastname:</h5>
+                <p>{{ employee.user.last_name }}</p>
+              </div>
+            </div>
+          
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-user"></i> Username:</h5>
+                <p>{{ employee.user.username }}</p>
+              </div>
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-envelope"></i> Email:</h5>
+                <p>{{ employee.user.email }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-briefcase"></i> Role:</h5>
+                <p>{{ employee.user.role }}</p>
+              </div>
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-building"></i> Branch:</h5>
+                <p>{{ employee.branch.name }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <h5 class="text-black-800"><i class="fas fa-toggle-on"></i> Active Status:</h5>
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="activeStatus{{ employee.id }}" {{ employee.user.is_active|yesno:"checked," }}>
+                  <label class="custom-control-label" for="activeStatus{{ employee.id }}">Active</label>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer justify-content-center">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
+{% endfor %}
+<!-- End View Employee Details Modal -->
+
+
+<!-- Edit employee Modal  -->
+{% for employee in employees %}
+<div id="editemployee-{{forloop.counter}}" class="modal fade">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content border-left-danger shadow py-2">
+      <div class="modal-header">
+        <h4 class="modal-title text-center"><span class="badge badge-success">Update  <b>{{employee.user.username}}'s Details</b></span></h4>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'branches:branch_employee_update' employee.id %}" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="form-group mb-3">
+            <label class="form-label text-center">Username</label>
+            <input type="text" class="form-control floating-input" name="username" value="{{ employee.user.username }}" required>
+            <input type="text" class="form-control" name="id" value="{{ employee.id }}" hidden>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label text-center">Email</label>
+            <input type="email" class="form-control floating-input" name="email" value="{{ employee.user.email }}" required>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label text-center">Choose Role</label>
+            <select id="role" name="role" class="custom-select" required>
+              <option value="null">Choose Role</option>
+              <option value="admin">Admin</option>
+              <option value="manager">Branch Manager</option>
+              <option value="cashier">Cashier</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label class="form-label text-center">Branch:</label>
+            <select name="branch" id="branch" class="custom-select" disabled>
+              <option value="" disabled selected>Select Branch</option>
+              {% for branch in branches %}
+              <option value="{{ branch.id }}"{% if employee.branch == branch %} selected{% endif %}>{{ branch.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer tex-center">
+        <input type="submit" class="btn btn-primary" value="Save">
+        <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value="Cancel">
+      </div>
+    </div>
+  </div>
+</div>
+{% endfor %}
+<!-- End Edit employee Modal  -->
+
+
+<!-- Delete employee Modal HTML -->
+{% for employee in employees %}
+<div id="deleteemployee-{{forloop.counter}}" class="modal fade">
+<div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content border-left-danger shadow py-2">
+        <form action="{% url 'branches:branch_employee_delete' employee.id %}" method="post">
+            {% csrf_token %}
+            <div class="modal-header">						
+                <h4 class="modal-title  text-center"><span class="badge badge-warning">Delete {{employee.user.username}}</span></h4>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body text-center">					
+                <p>Are you sure you want to delete this employee?</p>
+                <p class="text-warning mb-4 text-center">This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                
+                <input type="submit" class="btn btn-primary" value="Delete">
+                <input type="button" class="btn btn-danger" data-bs-dismiss="modal" value="Cancel">
+            </div>
+        </form>
+    </div>
+</div>
+</div>
+{% endfor %}
+<!-- End Delete employee Modal HTML -->
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock content%}

@@ -1,0 +1,437 @@
+{% extends 'dashboard/admin_dashboard.html' %}
+{% block content %}
+{% load static %}
+
+
+{% include 'scripts/main_loader.html' %}
+{% include 'scripts/messages.html' %}
+
+
+ <style>
+
+  #nameCard{
+    margin-left: 20px;
+    margin-right: 10px;
+    border-radius: 30px;
+    margin-bottom: 20px;
+  }
+  #tabCard{
+    margin-right: 10px;
+    margin-left: 20px;
+    margin-bottom: 20px;
+    
+  }
+  .breadcrumb{
+
+    background-color: white;
+    border-radius: 30px;
+}
+
+.pagetitle{
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-left: 20px;
+    
+
+
+}input[type="text"] {
+  margin-bottom: 10px;
+  width: auto;
+  margin-right: auto;
+  margin-top: auto;
+
+  
+  /* Styles for text input elements */
+}
+
+input[type="number"] {
+margin-bottom: 10px;
+margin-right: auto;
+margin-top: auto;
+
+
+/* Styles for text input elements */
+}
+input[type="password"] {
+  margin-bottom: 10px;
+  margin-right: auto;
+  margin-top: auto;
+  width: auto;
+  
+  
+  /* Styles for text input elements */
+}
+input[type="email"] {
+  margin-bottom: 10px;
+  margin-right: auto;
+  margin-top: auto;
+  width: auto;
+  
+  
+  /* Styles for text input elements */
+}
+input[type="option"] {
+margin-bottom: 10px;
+margin-left: auto;
+margin-right: auto;
+margin-top: auto;
+border-radius: 10px;
+
+/* Styles for text input elements */
+}
+input[type="file"] {
+
+background-color:rgb(206, 96, 114);
+margin-bottom: 10px;
+margin-left: auto;
+margin-right: auto;
+margin-top: auto;
+border-radius: 10px;
+width: 220px;
+
+
+
+/* Styles for text input elements */
+}
+
+
+.form-control {
+border: 0;
+border-bottom: 1px solid rgb(206, 96, 114);
+border-radius: 0;
+padding: 8px;
+}
+.form-control:focus {
+  box-shadow: none;
+
+}
+
+.floating-input {
+padding-top: 10px;
+padding-bottom: 10px;
+}
+
+.floating-input:focus, .floating-input:not(:placeholder-shown) {
+padding-top: 0;
+padding-bottom: 0;
+}
+
+.floating-input:not(:placeholder-shown) + label {
+position: absolute;
+top: -12px;
+left: 0;
+font-size: 80%;
+color: #777;
+}
+
+label {
+font-weight: bold;
+color: #333;
+}
+.custom-select {
+/* Your styles here */
+border: 1px solid #ccc;
+padding: 5px;
+border-radius: 10px;
+}
+.custom-select:focus {
+border: 0;
+border-bottom: 1px solid rgb(206, 96, 114);
+border-radius: 0;
+padding: 8px;
+
+}
+.btn{
+margin-top: 5px;
+
+
+}
+#profile-edit{
+  margin-bottom: 20px;
+
+}
+.profile-picture {
+ 
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto;
+  display: block;
+}
+#profiletab{
+  margin-bottom: 20px;
+ 
+}
+.nav-item{
+  margin: auto;
+}
+/* Style the tabs */
+.nav-tabs {
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(212, 49, 49, 0.842);
+}
+
+.nav-tabs .nav-item {
+  margin-right: 10px;
+}
+
+.nav-tabs .nav-link {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  padding: 10px 20px;
+ border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.nav-tabs .nav-link:hover {
+  background-color: #f2f2f2;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: rgb(196, 69, 90);
+  color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Add Font Awesome icons to the tabs */
+.nav-tabs .nav-link::before {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  margin-right: 10px;
+}
+
+.nav-tabs .nav-link.active::before {
+  color: #fff;
+}
+
+#profile-overview .nav-link::before {
+  content: '\f2bb'; /* Overview icon */
+}
+
+#profile-edit .nav-link::before {
+  content: '\f044'; /* Edit icon */
+}
+
+#profile-change-password .nav-link::before {
+  content: '\f13e'; /* Lock icon */
+}
+
+
+
+
+
+
+
+ </style>
+
+
+
+<div class="pagetitle">
+  <h1  class=" h5 text-md font-weight-bold text-primary text-uppercase mb-1">Profile</h1>
+  <nav>
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active">{{user.username}}'s Profile</li>
+    </ol>
+  </nav>
+</div><!-- End Page Title -->
+
+
+
+
+<section class="section profile">
+  <div class="row">
+    <div class="col-xl-4">
+
+
+
+      <div class="card border-left-danger shadow  py-2" id="nameCard">
+        {% if user_profile.profile_pic %}
+        <div style="text-align: center;">
+        <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-picture">
+        {% else %}
+        <img src="{% static 'img\undraw_profile_2.svg' %}" alt="Default Profile Picture" class="profile-picture">
+        {% endif %}
+      </div>
+        <div class="card-body profile-card pt-4 d-flex flex-column align-items-center">
+          <h2  class=" h4 text font-weight-bold text-primary text-uppercase mb-1">{{ user.first_name }}</h2><h2 class=" h4 text font-weight-bold text-primary text-uppercase mb-1">{{user.last_name}}</h2>
+          <h3  class=" h5 text-xs font-weight-bold text-success text-uppercase mb-1">{{user.role}}</h3>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col-xl-5" id="profiletab">
+      <div class="card border-left-danger shadow  py-2" id="tabCard">
+        <div class="card-body pt-3">
+          <!-- Bordered Tabs -->
+          <ul class="nav nav-tabs nav-tabs-bordered">
+
+            <li class="nav-item">
+              <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Overview</button>
+            </li>
+
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-edit">Edit Profile</button>
+            </li>
+
+
+            <li class="nav-item">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-change-password">Change Password</button>
+            </li>
+
+          </ul>
+          <div class="tab-content pt-2">
+
+            <div class="tab-pane fade show active profile-overview" id="profile-overview">
+
+              <h5 class=" h6 text font-weight-bold text-success text-uppercase mb-1">Profile Details</h5>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label text-bg-dark ">Name</div>
+                <div class="col-lg-9 col-md-8">{{user.first_name}}</div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">Company</div>
+                <div class="col-lg-9 col-md-8" disabled>OneDrive</div>
+              </div>
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">Role</div>
+                <div class="col-lg-9 col-md-8" disabled>{{user.role}}</div>
+              </div>
+
+
+              <div class="row">
+                <div class="col-lg-3 col-md-4 label">Email</div>
+                <div class="col-lg-9 col-md-8">{{user.email}}</div>
+              </div>
+
+            </div>
+
+            <div class="tab-pane fade profile-edit pt-3" id="profile-edit">
+
+              <!-- Profile Edit Form -->
+              <form action="{% url 'profile:update_user_details' user.pk  %}" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="row mb-3">
+                  <label for="profileImage" class="col-md-4 col-lg-3 col-form-label">Profile Image</label>
+                  <div class="col-md-8 col-lg-9">
+                    {% if user_profile.profile_pic %}
+                    <div style="text-align: center ;">
+                    <img src="{{ user_profile.profile_pic.url }}" alt="Profile" class="profile-picture">
+                    {% else %}
+                      <img src="{% static 'imag/undraw_profile_2.svg' %}" alt="Default Profile Picture" class="profile-picture">
+                    {% endif %}
+                    <div class="pt-2">
+                      <input type="file" name="profile_pic" id="profileImage" class="btn btn-primary btn-sm ">
+                    </div>
+                  </div>
+                  </div>
+                </div>
+                
+                <div class="row mb-3">
+                  <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Username</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="username" type="text" class="form-control" id="username" value="{{user.username}}">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="fullName" class="col-md-4 col-lg-3 col-form-label">First Name</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="first_name" type="text" class="form-control" id="first_name" value="{{user.first_name}}">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="fullName" class="col-md-4 col-lg-3 col-form-label">Last Name</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="last_name" type="text" class="form-control" id="last_name" value="{{user.last_name}}">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="Email" class="col-md-4 col-lg-3 col-form-label">Email</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="email" type="email" class="form-control" id="Email" value="{{user.email}}">
+                  </div>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+              </form><!-- End Profile Edit Form -->
+
+            </div>
+
+
+            <div class="tab-pane fade pt-3" id="profile-change-password">
+              <!-- Change Password Form -->
+              <form action="{% url 'profile:change_password' user.pk %}" method="POST">
+                {% csrf_token %}
+                <div class="row mb-3">
+                  <label for="newPassword" class="col-md-4 col-lg-3 col-form-label">New Password</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="new_password" type="password" class="form-control" id="newPassword">
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <label for="renewPassword" class="col-md-4 col-lg-3 col-form-label">Re-enter New Password</label>
+                  <div class="col-md-8 col-lg-9">
+                    <input name="confirm_password" type="password" class="form-control" id="renewPassword">
+                  </div>
+                </div>
+
+                <div class="text-center">
+                  <button type="submit" class="btn btn-primary">Change Password</button>
+                </div>
+              </form><!-- End Change Password Form -->
+
+            </div>
+
+          </div><!-- End Bordered Tabs -->
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+
+  $(document).ready(function() {
+    // Add password validation and error handling
+    $("#change-password-form").submit(function(event) {
+      var newPassword = $("#newPassword").val();
+      var confirmPassword = $("#renewPassword").val();
+  
+      if (newPassword !== confirmPassword) {
+        event.preventDefault();
+        $("#password-error").show();
+        return false;
+      } else {
+        $("#password-error").hide();
+        return true;
+      }
+    });
+  });
+</script>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+

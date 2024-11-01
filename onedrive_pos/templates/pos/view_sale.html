@@ -1,0 +1,26 @@
+{% extends 'dashboard/cashier_dashboard.html' %}
+{% block content %}
+{% include 'scripts/main_loader.html' %}
+{% include 'scripts/messages.html' %}
+<table class="table">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in sale.saleitem_set.all %}
+        <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.product.price }}</td>
+            <td>{{ item.total_price }}</td>
+        </tr>
+        {% endfor  %}
+    </tbody>
+</table>
+<p>Total: {{ sale.total_amount }}</p>
+{% endblock %}

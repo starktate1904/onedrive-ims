@@ -1,0 +1,869 @@
+{% extends 'dashboard/cashier_dashboard.html' %} 
+{% block content %}
+{% load static %}
+
+
+
+  <!-- Begin Page Content -->
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-lg-5">
+
+          <!-- Default Card Example -->
+          <div class="card mb-4" id='cashiercard'>
+            <div class="col-lg-12">
+                <div class="card card-sm border-left-danger shadow py-2 mb-4" id="productsoutput">
+                  <div class="card-body ">
+                        <!-- Company logo -->
+                
+                        <!-- Cashier information -->
+                        <h6 class="card-title text-left text-uppercase" id="cashiername">
+                          Cashier ID: <span class="badge bg-success">{{employee.user.id}}</span>
+                        </h6>
+                        <h6 class="card-title text-left text-uppercase" id="cashiername">
+                          Cashier Name: <span class="badge bg-success">{{employee.user.first_name}} {{employee.user.last_name}}</span>
+                        </h6>
+                        <h6 class="text-left text-uppercase">OneDrive: {{branch}}</h6>
+                        <h6 class="text-right">Date: {{today}}</h6>
+                        <!-- Search bar -->
+                        <div class="input-group" id="navbarSearch">
+                          <input type="text" id="product-search" class="form-control bg-light border-left-success shadow h-100 py-2 border-0 small" placeholder="Search Products..." aria-label="Search" name="search" aria-describedby="basic-addon2">
+                          <div class="input-group-append">
+                            <button class="btn btn-danger" type="submit">
+                              <i class="fas fa-search fa-sm"></i>
+                            </button>
+                          </div>
+                        </div>
+                      
+                    </div>
+                   
+                  
+                </div>
+         
+            </div>
+             
+          </div>
+
+      </div>
+
+      <div class="col-lg-7">
+
+          <!-- Dropdown Card Example -->
+          <div class="card shadow mb-4">
+              <!-- Sale details column -->
+              <div class="col-lg-12">
+  
+                <div class="card mb-6 " id="scrollable-content">
+                   <!-- Product grid -->
+                   <div class="scrollable-content">
+                    <h5 class="card-title h5 mb-0 text-light-900 ml-3 text-uppercase justify-content-center text-center" id="productstitle">
+                      <span class="badge bg-success">Product Search Results</span>
+                    </h5>
+                    <!-- Pagination container -->
+                    <div class="d-flex justify-content-center" id="pagination-container">
+                      <nav aria-label="Page navigation example">
+                        <ul class="pagination">
+                          <!-- Pagination links will be generated here -->
+                        </ul>
+                      </nav>
+                    </div>
+                    <!-- Product grid container -->
+                    <div id="product-grid" class="row">
+                      <!-- Products will be loaded here -->
+                    </div>
+                  </div>
+                   
+                </div>
+          
+                
+          
+            </div>
+        
+             
+          </div>
+
+         
+      </div>
+
+
+
+  </div>
+
+  <div class="row" >
+    <div class="col-lg-6 ">
+      <div class="card card-sm border-left-danger shadow py-2" id="saledetailsoutput">
+        <div class="card-body">
+          <!-- Sale details header -->
+          <h5 class="card-title text-center">
+            <i class="fas fa-shopping-cart fa-2x text-black-400" id="cart"></i>
+          </h5>
+          <!-- Sale details table -->
+          <div class="col-lg-6 ">
+            <h5 class="card-title">Sale Details</h5>
+            <table class="table table-striped table-borderless table-responsive-lg table-responsive-xxl table-responsive-md table-responsive-sm table-responsive-xl table-sm" id="sale-table">
+              <thead>
+              
+              </thead>
+              <tbody id="sale-table-body">
+               
+                
+               
+              </tbody>
+            </table>
+            <!-- Total amount -->
+            <p>Total: <span id="total">{{ total_amount }}</span></p>
+            <!-- Complete sale button -->
+            <button type="button" class="btn btn-primary complete-sale" style="display: none;">Complete Sale</button>
+            <!-- Amount paid input field -->
+            <div class="form-group">
+              <label for="amount-paid">Amount Paid:</label>
+              <input type="number" class="form-control" id="amount-paid" placeholder="Enter amount paid" style="display: none;" value="1">
+              <small id="amount-paid-error" class="text-danger" style="display: none;"></small> <!-- Error message placeholder -->
+            </div>
+
+            <!-- Change display -->
+            <div class="form-group">
+              <label for="change-amount">Change:</label>
+              <input type="text" class="form-control" id="change-amount" placeholder="Change will be calculated" readonly>
+            </div>
+            <!-- Process sale button -->
+            <button type="button" class="btn btn-primary complete-sale-btn" style="display: none;">Process Sale</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+    
+  </div>
+
+
+
+<!-- Modal for sale completion -->
+<div class="modal fade" id="saleCompletedModal" tabindex="-1" role="dialog" aria-labelledby="saleCompletedModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="saleCompletedModalLabel">Sale Completed</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <i class="fas fa-check-circle fa-5x text-success"></i>
+          <h4>Sale Completed Successfully!</h4>
+          <p>Thank you for completing the sale.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="show-receipt-modal">View Receipt</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for receipt -->
+<div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="receiptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable custom-modal-lg" role="document" id="receiptModall"> <!-- Added custom class -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="receiptModalLabel">Receipt</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="receipt-body">
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="closeModalButton">Close</button>
+        <button type="button" class="btn btn-success" id="print-receipt-btn">Print</button>
+        <button type="button" class="btn btn-info" id="save-receipt-btn">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  #receiptModall{
+    margin-top: 0;
+    width: 500px;
+  }
+  .custom-modal-lg {
+    max-width: 1000px; /* Set your desired width here */
+  }
+  
+  @media (max-width: 768px) {
+    .custom-modal-lg {
+      max-width: 90%; /* Adjust for smaller screens */
+    }
+  }
+  .container-fluid{
+    margin: 10px;
+   
+  }
+
+ 
+
+  #scrollable-content {
+    height: 500px; /* Adjust the height as needed */
+    overflow-y: auto;
+  }
+  #sale-table {
+    width: 100px;
+    font-size: 0.75rem; /* Reduce font size */
+  }
+  
+  
+  #sale-table tbody td {
+    padding: 0.3rem; /* Reduce padding */
+  }
+  
+  #sale-table .quantity-input {
+    height: 25px; /* Reduce height */
+    font-size: 0.75rem; /* Reduce font size */
+  }
+  
+  #sale-table .remove-from-sale {
+    padding: 0.2rem 0.5rem; /* Adjust padding for button */
+    font-size: 0.75rem; /* Reduce font size for button */
+  }
+ 
+  #sale-table tbody tr:hover {
+    background-color: #f1f1f1; /* Change hover color for better visibility */
+  }
+  .product-card {
+    height: 250px; /* Reduce the height */
+    font-size: 14px; /* Reduce the font size */
+  }
+  
+  .product-card .card-title {
+    font-size: 16px; /* Reduce the font size */
+  }
+  
+  .product-card .card-text {
+    font-size: 13px; /* Reduce the font size */
+  }
+  
+  .product-card .badge {
+    font-size: 11px; /* Reduce the font size */
+  }
+  
+  .product-card .quantity-input {
+    height: 35px; /* Reduce the height */
+    font-size: 15px; /* Increase the font size */
+  }
+  
+  .product-card .add-to-sale {
+    height: 35px; /* Reduce the height */
+    font-size: 15px; /* Increase the font size */
+  }
+
+  #sale-table .quantity-input {
+    border-color: #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  #sale-table .remove-from-sale {
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+    background-color: #dc3545;
+    border-color: #dc3545;
+  }
+
+  #sale-table .remove-from-sale:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+  }
+  /* Add some modern styling */
+ 
+
+  .card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+
+  .card-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .badge {
+    font-size: 14px;
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
+
+  .badge-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .badge-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .badge-warning {
+    background-color: #ffc107;
+    color: #fff;
+  }
+
+  .input-group {
+    margin-bottom: 10px;
+  }
+
+  .input-group-append {
+    margin-left: -1px;
+  }
+
+  .form-control {
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    margin-top: 5px;
+  }
+
+  .btn-danger {
+    background-color: #dc3545;
+    color: #fff;
+  }
+
+  .btn-primary {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+
+  .btn-success {
+    background-color: #28a745;
+    color: #fff;
+  }
+
+  .btn-info {
+    background-color: #8BC34A;
+    color: #fff;
+  }
+
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  }
+
+  .modal-header {
+    background-color: #4CAF50;
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .modal-title {
+    font-weight: bold;
+    font-size: 18px;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    background-color: #f9f9f9;
+    border-radius: 0 0 10px 10px;
+  }
+
+  .fa-check-circle {
+    color: #4CAF50;
+  }
+
+  .text-success {
+    color: #4CAF50;
+  }
+
+  #receiptModal .modal-footer {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #receiptModal .modal-footer button {
+    margin-right: 10px;
+  }
+
+  #receiptModal .modal-footer #print-receipt-btn {
+    background-color: #4CAF50;
+    color: #fff;
+  }
+
+  #receiptModal .modal-footer #save-receipt-btn {
+    background-color: #8BC34A;
+    color: #fff;
+  }
+
+  .product-card {
+    margin-left: 10px;
+    margin-right: 10px;
+    
+    margin-bottom: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .product-card .card-body {
+    padding: 5px;
+  }
+  
+  .product-card .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .product-card .card-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .product-card .badge {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 10px;
+  }
+  
+  .product-card .quantity-input {
+    width: 50px;
+    height: 30px;
+    font-size: 16px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .product-card .add-to-sale {
+    padding: 5px 10px;
+    font-size: 14px;
+    border-radius: 5px;
+  }
+
+  .product-card .card-footer button {
+    margin-right: 10px;
+    margin-top: 5px;
+  }
+
+  #productsoutput {
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
+    
+  }
+
+  #saledetailsoutput {
+    max-width: fit-content;
+  }
+
+  #total {
+    font-size: large;
+    color: #8f3a3a;
+  }
+  
+</style>
+
+
+
+{% block javascripts %}
+
+<script>
+  
+  var receiptHtml;
+
+  $(document).ready(function() {
+   // Product search functionality
+$(document).ready(function() {
+  // Product search functionality
+  $('#product-search').on('input', function() {
+    var searchTerm = $(this).val();
+    var page = 1;
+    $.ajax({
+      url: "{% url 'pos:search_products' %}", // Replace with the actual URL
+      type: 'GET',
+      data: {
+        search_term: searchTerm,
+        page: page
+      },
+      success: function(data) {
+        $('#product-grid').empty(); // Clear the grid container
+        for (var i = 0; i < data.results.length; i++) {
+          var product = data.results[i];
+          var qtyBadgeClass = '';
+          if (product.quantity < 3) {
+            qtyBadgeClass = 'badge-danger';
+          } else if (product.quantity >= 3 && product.quantity < 6) {
+            qtyBadgeClass = 'badge-warning';
+          } else {
+            qtyBadgeClass = 'badge-success';
+          }
+          $('#product-grid').append(
+            '<div class="col-md-4 col-sm-8 col-xs-12">' + // Grid column classes
+            '<div class="card card-sm product-card">' +
+            '<div class="card-body">' +
+            '<h3 class="card-title text-truncate">' + product.name + '</h3>' +
+            '<p class="card-text text-truncate text-sm">Location: ' + product.location + '</p>' +
+            '<p class="card-text text-truncate">Category: ' + product.category + '</p>' +
+            '<p class="card-text text-truncate">Make: ' + product.make + '</p>' +
+            '<p class="card-text text-truncate">Model: ' + product.model + '</p>' +
+            '<p class="card-text">In Stock: <span class="badge ' + qtyBadgeClass + '">' + product.quantity + '</span></p>' +
+            '<div class="d-flex justify-content-between align-items-center">' +
+            '<input type="number" class="quantity-input form-control form-control-sm" value="1" style="width: 50px;">' +
+            '<button class="btn btn-success add-to-sale" data-product-id="' + product.id +  '" data-product-quantity="' + product.quantity + '" data-product-name="' + product.name + '">Add to Sale</button>' +
+            '</div>' +
+            '</div>' +
+            '</div>' +
+            '</div>'
+          );
+        }
+
+        // Display pagination links
+        var paginationHtml = '';
+        if (data.has_previous) {
+          paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + data.previous_page_number + '">Previous</a></li>';
+        }
+        paginationHtml += '<li class="page-item active"><a class="page-link" href="#">' + page + '</a></li>';
+        if (data.has_next) {
+          paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + data.next_page_number + '">Next</a></li>';
+        }
+        $('#pagination-container ul').html(paginationHtml);
+
+        // Handle pagination link clicks
+        $('#pagination-container ul li a').on('click', function(e) {
+          e.preventDefault();
+          var page = $(this).data('page');
+          if (page) {
+            $.ajax({
+              url: "{% url 'pos:search_products' %}", // Replace with the actual URL
+              type: 'GET',
+              data: {
+                search_term: searchTerm,
+                page: page
+              },
+              success: function(data) {
+                $('#product-grid').empty(); // Clear the grid container
+                for (var i = 0; i < data.results.length; i++) {
+                  var product = data.results[i];
+                  var qtyBadgeClass = '';
+                  if (product.quantity < 3) {
+                    qtyBadgeClass = 'badge-danger';
+                  } else if (product.quantity >= 3 && product.quantity < 6) {
+                    qtyBadgeClass = 'badge-warning';
+                  } else {
+                    qtyBadgeClass = 'badge-success';
+                  }
+                  $('#product-grid').append(
+                          '<div class="col-md-4 col-sm-8 col-xs-12">' + // Grid column classes
+                  '<div class="card card-sm product-card">' +
+                  '<div class="card-body">' +
+                  '<h3 class="card-title text-truncate">' + product.name + '</h3>' +
+                  '<p class="card-text text-truncate">Category: ' + product.category + '</p>' +
+                  '<p class="card-text text-truncate">Make: ' + product.make + '</p>' +
+                  '<p class="card-text text-truncate">Model: ' + product.model + '</p>' +
+                  '<p class="card-text">In Stock: <span class="badge ' + qtyBadgeClass + '">' + product.quantity + '</span></p>' +
+                  '<div class="d-flex justify-content-between align-items-center">' +
+                  '<input type="number" class="quantity-input form-control form-control-sm" value="1" style="width: 50px;">' +
+                  '<button class="btn btn-success add-to-sale" data-product-id="' + product.id +  '" data-product-quantity="' + product.quantity + '" data-product-name="' + product.name + '">Add to Sale</button>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>' +
+                  '</div>'
+                  );
+                }
+
+                // Display pagination links
+                var paginationHtml = '';
+                if (data.has_previous) {
+                  paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + data.previous_page_number + '">Previous</a></li>';
+                }
+                paginationHtml += '<li class="page-item active"><a class="page-link" href="#">' + page + '</a></li>';
+                if (data.has_next) {
+                  paginationHtml += '<li class="page-item"><a class="page-link" href="#" data-page="' + data.next_page_number + '">Next</a></li>';
+                }
+                $('#pagination-container ul').html(paginationHtml);
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+});
+
+
+
+// Add product to sale
+$(document).on('click', '.add-to-sale', function() {
+  var productId = $(this).data('product-id');
+  var productQuantity = $(this).data('product-quantity'); // Get the product quantity
+  var saleId = $('#sale-id').val(); // Get the sale ID from the hidden input field
+  var quantity = $(this).closest('.card').find('.quantity-input').val(); // Get the quantity from the input field
+  var existingRow = $('#sale-table-body tr').find('td:nth-child(1):contains("' + $(this).data('product-name') + '")').closest('tr');
+  if (existingRow.length > 0) {
+    var existingQuantityInput = existingRow.find('td:nth-child(2) input');
+    var existingQuantity = parseInt(existingQuantityInput.val());
+    var newQuantity = existingQuantity + parseInt(quantity);
+    if (newQuantity <= productQuantity) {
+      existingQuantityInput.val(newQuantity);
+      var price = existingRow.find('td:nth-child(3)').text();
+      existingRow.find('td:nth-child(4) span').text(total.toFixed(2));
+      updateTotal();
+    } else {
+      alert('Product quantity exceeded');
+    }
+  } else {
+    if (saleId) {
+      $.ajax({
+        url: "{% url 'pos:add_product_to_sale'%}",
+        type: 'POST',
+        data: {
+          product_id: productId,
+          quantity: quantity,
+          sale_id: saleId
+        },
+        headers: {
+          'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          // Update the sale table and total amount
+          $('#sale-table-body').html(data.sale_table);
+          $('#total').text(data.total_amount);
+          console.log(data); // Log the response from the server
+          // Show the complete sale button
+          $('.complete-sale-btn').show();
+          $('#amount-paid').show();
+        }
+      });
+    } else {
+      // Create a new sale if there is no sale_id
+      $.ajax({
+        url: "{% url 'pos:create_sale'%}",
+        type: 'POST',
+        headers: {
+          'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          // Get the new sale_id
+          var newSaleId = data.sale_id;
+          // Update the sale_id input field
+          $('#sale-id').val(newSaleId);
+          // Add the product to the new sale
+          $.ajax({
+            url: "{% url 'pos:add_product_to_sale'%}",
+            type: 'POST',
+            data: {
+              product_id: productId,
+              quantity: quantity,
+              sale_id: newSaleId
+            },
+            headers: {
+              'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(data) {
+              // Update the sale table and total amount
+              $('#sale-table-body').html(data.sale_table);
+              $('#total').text(data.total_amount);
+              console.log(data); // Log the response from the server
+              // Show the complete sale button
+              $('.complete-sale-btn').show();
+              $('#amount-paid').show();
+            }
+          });
+        }
+      });
+    }
+  }
+});
+
+
+
+// Update total when quantity changes
+    $(document).on('input', '.quantity-input', function() {
+  var quantity = $(this).val();
+  var price = $(this).data('price');
+  var total = quantity * price;
+  $(this).closest('tr').find('td:nth-child(4) span').text(total);
+  updateTotal();
+
+  // Update the quantity of the sale item
+  var productId = $(this).attr('id').split('_')[1];
+  var saleId = $('#sale-id').val();
+  $.ajax({
+    url: "",
+    type: 'POST',
+    data: {
+      product_id: productId,
+      quantity: quantity,
+      sale_id: saleId,
+      
+
+    },
+    headers: {
+      'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function(data) {
+      console.log(data);
+    }
+  });
+});
+
+    // Update total when quantity changes
+    function updateTotal() {
+      var total = 0;
+      $('#sale-table-body tr').each(function() {
+        var totalCell = $(this).find('td:nth-child(4) span');
+        var totalText = totalCell.text();
+        if (totalText !== '') {
+          total += parseFloat(totalText);
+        }
+      });
+      $('#total').text(total.toFixed(2));
+
+    }
+    
+// Update change when amount paid changes
+$('#amount-paid').on('input', function() {
+  var amountPaid = parseFloat($(this).val()) || 0; // Get the amount paid
+  var total = parseFloat($('#total').text()) || 0; // Get the total amount
+  var change = amountPaid - total; // Calculate change
+
+  // Validate amount paid
+  if (amountPaid < 0) {
+    $('#amount-paid-error').text('Amount paid cannot be negative.').show();
+    $('#change-amount').val(''); // Clear change field
+  } else if (amountPaid < total) {
+    $('#amount-paid-error').text('Amount paid must be at least equal to the total amount.').show();
+    $('#change-amount').val(''); // Clear change field
+  } else {
+    $('#amount-paid-error').hide(); // Hide error message if valid
+    $('#change-amount').val(change.toFixed(2)); // Update the change input field
+  }
+});
+
+
+    // Complete sale
+$(document).on('click', '.complete-sale-btn', function() {
+  var saleId = $('#sale-id').val();
+  var amountPaid = parseFloat($('#amount-paid').val()); // Parse as float
+  var total = parseFloat($('#total').text()); // Parse total as float
+
+  // Check if the amount paid is valid before proceeding
+  if (amountPaid < total) {
+    alert('Please ensure the amount paid is at least equal to the total amount.');
+    return; // Prevent proceeding with the sale
+  } else if (amountPaid < 0) {
+    alert('Amount paid cannot be negative.');
+    return; // Prevent proceeding with the sale
+  }
+
+  $.ajax({
+    url: "{% url 'pos:complete_sale' %}",
+    type: 'POST',
+    data: {
+      sale_id: saleId,
+      amount_paid: amountPaid,
+    },
+    headers: {
+      'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function(data) {
+      // Update the sale table and total amount
+      $('#sale-table-body').html('');
+      $('#total').text('0.00');
+      // Store the receipt HTML in a variable
+      receiptHtml = data.receipt_html;
+      // Show the sale completed modal
+      $('#saleCompletedModal').modal('show');
+   
+    }
+  });
+});
+    
+
+// Remove product from sale
+    $(document).on('click', '.remove-from-sale', function() {
+      var productId = $(this).data('product-id');
+      var saleId = $('#sale-id').val();
+      $.ajax({
+        url: "{% url 'pos:remove_product_from_sale' %}",
+        type: 'POST',
+        data: {
+          product_id: productId,
+          sale_id: saleId
+        },
+        headers: {
+          'X-CSRFToken': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          // Update the sale table and total amount
+          $('#sale-table-body').html(data.sale_table);
+          $('#total').text(data.total_amount);
+        }
+      });
+    });
+
+    // Show receipt modal after sale completed modal
+    $('#show-receipt-modal').on('click', function() {
+      $('#saleCompletedModal').modal('hide');
+      $('#receiptModal').modal ('show');
+      // Use the stored receipt HTML
+      $('#receipt-body').html(receiptHtml);
+    });
+
+    // Print receipt button
+    $('#print-receipt-btn').on('click', function() {
+      var receiptHtml = $('#receipt-body').html();
+      var printWindow = window.open('', '_blank ');
+      printWindow.document.write(receiptHtml);
+      printWindow.print();
+    });
+
+    // Save receipt button
+    $('#save-receipt-btn').on('click', function() {
+      var receiptHtml = $('#receipt-body').html();
+      var blob = new Blob([receiptHtml], {
+        type: 'text/html'
+      });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'receipt.html';
+      a.click();
+    });
+  });
+ 
+
+
+  // JavaScript to handle the close button click
+  document.getElementById('closeModalButton').addEventListener('click', function() {
+    // Redirect to a specific URL
+    window.location.href = "{% url 'pos:sale_list' %}"; // Replace with your desired URL
+  });
+</script>
+
+
+
+{% endblock javascripts %}
+
+{% endblock %}

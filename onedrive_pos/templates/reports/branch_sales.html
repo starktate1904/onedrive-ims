@@ -1,0 +1,247 @@
+{% extends 'dashboard/manager_dashboard.html' %}
+
+{% block content %}
+{% include 'scripts/main_loader.html' %}
+{% include 'scripts/messages.html' %}
+
+<!-- Page Title -->
+<div class="pagetitle">
+    <h1 class="h5 text-md font-weight-bold text-primary text-uppercase mb-1">Sales</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'auth_pos:manager_dashboard' %}"><i class="fas fa-home"></i> Home</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'auth_pos:manager_sale_list' %}"><i class="fas fa-shopping-cart"></i> All Sales</a></li>
+        </ol>
+    </nav>
+</div>
+<!-- End Page Title -->
+
+<!-- Custom Styling -->
+<style>
+    .pagetitle {
+        margin: 30px 20px;
+        padding: 20px;
+        background-color: #f7f7f7;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .breadcrumb {
+        background-color: white;
+        border-radius: 30px;
+    }
+
+    #tablehead {
+        background-color: rgb(206, 96, 114);
+        color: rgb(37, 25, 25);
+        padding: 10px;
+        border-radius: 10px 10px 0 0;
+    }
+
+    /* Style the table rows */
+    #dataTable tr {
+        background-color: #f7f7f7;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    /* Style the pagination */
+    .pagination {
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    /* Style the pagination links */
+    .page-link {
+        background-color: #f7f7f7;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+    }
+
+    /* Style the active pagination link */
+    .page-item.active .page-link {
+        background-color: rgb(206, 96, 114);
+        color: white;
+    }
+
+    /* Add some hover effects to the table rows */
+    #dataTable tr:hover {
+        background-color: rgb(206, 96, 114);
+        cursor: pointer;
+    }
+
+    /* Add some hover effects to the pagination links */
+    .page-link:hover {
+        background-color: #e7e7e7;
+        cursor: pointer;
+    }
+
+    .inputs {
+        margin: 10px 5px;
+        border: 1px solid #bd4242;
+        padding: 5px;
+        border-radius: 5px;
+    }
+
+    .custom-select {
+        border: 1px solid #bd4242;
+        padding: 5px;
+        border-radius: 10px;
+        margin: 10px 5px;
+    }
+
+    .custom-select:focus {
+        border: 0;
+        border-bottom: 1px solid rgb(206, 96, 114);
+        border-radius: 0;
+        padding: 8px;
+    }
+
+    #filter {
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        background-color: rgb(206, 96, 114);
+        color: white;
+        border-color: rgb(206, 96, 114);
+        height: 38px;
+        margin-top: 7px;
+    }
+
+    .nav-item {
+        margin-right: 5px;
+    }
+
+    .btn {
+        margin-top: 5px;
+    }
+</style>
+<!-- End Custom Styling -->
+
+<!-- Add JavaScript code to trigger the report generation -->
+<script>
+    $(document).ready(function() {
+        $('#generate-report').on('click', function() {
+            window.open('{% url "pos:branch_generate_sales_report" %}', '_blank');
+        });
+    });
+</script>
+
+<!-- Sales List -->
+<section class="section profile">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-left-success shadow h-100 py-2">
+                <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">
+                                <a href="{% url 'auth_pos:manager_sale_list' %}"><i class="fas fa-list"></i> All Sales</a>
+                            </button>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Topbar Search -->
+                            <form method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                <div class="input-group">
+                                    <select name="date_filter" class="custom-select">
+                                        <option value="">All Dates</option>
+                                        <option value="today" {% if date_filter == 'today' %}selected{% endif %}>Today</option>
+                                        <option value="yesterday" {% if date_filter == 'yesterday' %}selected{% endif %}>Yesterday</option>
+                                        <option value="last_week" {% if date_filter == 'last_week' %}selected{% endif %}>Last Week</option>
+                                        <option value="last_month" {% if date_filter == 'last_month' %}selected{% endif %}>Last Month</option>
+                                    </select>
+                                    <input type="number" class="inputs" id="total_amount_filter" name="total_amount_filter" placeholder="Enter amount" value="{{ total_amount_filter }}">
+                                    <input type="text" class="inputs" id="sale_item_filter" name="sale_item_filter" placeholder="Enter sale item name" value="{{ sale_item_filter }}">
+                                    <button type="submit" id="filter">Filter <i class="fas fa-filter"></i></button>
+                                </div>
+                            </form>
+                        </li>
+                        <li class="nav-item">
+                            <div>
+                                <a href="#" id="generate-report" class="btn btn-primary btn-icon-split">
+                                    <span class="icon text-white-50">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </span>
+                                    <span class="text">Generate Report</span>
+                                </a>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-overview border-left-danger shadow h-100 py-2" id="products-overview">
+                            <div class="card-body">
+                                <div class="table-responsive table-borderless table-hover table-responsive-sm table-responsive-md table-responsive-lg table-striped">
+                                    <table class="table table-hover" id="dataTable" width="100%" cellspacing="1">
+                                        <thead id="tablehead">
+                                            <tr>
+                                                <th>ID <i class="fas fa-hashtag"></i></th>
+                                                <th>Date <i class="fas fa-calendar-alt"></i></th>
+                                                <th>Sale Item <i class="fas fa-shopping-basket"></i></th>
+                                                <th>Total Amount <i class="fas fa-dollar-sign"></i></th>
+                                                <th>Cashier <i class="fas fa-user"></i></th>
+                                                <th>Branch <i class="fas fa-building"></i></th>
+                                            </tr>
+                                        </thead>
+                                        {% if sales %}
+                                        <tbody>
+                                            {% for sale in sales %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{ sale.date_created }}</td>
+                                                <td>
+                                                    <ul>
+                                                    {% for sale_item in sale.saleitem_set.all %}
+                                                    <li>{{ sale_item.product.name }} x {{ sale_item.quantity }} ({{ sale_item.price }})</li>
+                                                    {% endfor %}
+                                                </ul>
+                                            </td>
+                                                <td>{{ sale.total_amount }}</td>
+                                                <td>{{ sale.cashier.user.first_name }}</td>
+                                                <td>{{ sale.branch.name }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        {% else %}
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="6" class="text-center">
+                                                    No Sales Found
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                        {% endif %}
+                                    </table>
+                                </div>
+
+                                <nav aria-label="Page navigation example" class="mt-4">
+                                    <ul class="pagination justify-content-end">
+                                        {% if sales.has_previous %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ sales.previous_page_number }}&date_filter={{ date_filter }}&total_amount_filter={{ total_amount_filter }}&sale_item_filter={{ sale_item_filter }}&product_filter={{ product_filter }}&cashier_filter={{ cashier_filter }}&branch_filter={{ branch_filter }}">Previous <i class="fas fa-chevron-left"></i></a>
+                                        </li>
+                                        {% endif %}
+
+                                        <li class="page-item active">
+                                            <a class="page-link" href="#">{{ sales.number }}</a>
+                                        </li>
+
+                                        {% if sales.has_next %}
+                                        <li class="page -item">
+                                            <a class="page-link" href="?page={{ sales.next_page_number }}&date_filter={{ date_filter }}&total_amount_filter={{ total_amount_filter }}&sale_item_filter={{ sale_item_filter }}&product_filter={{ product_filter }}&cashier_filter={{ cashier_filter }}&branch_filter={{ branch_filter }}">Next <i class="fas fa-chevron-right"></i></a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- End Sales List -->
+{% endblock content %}

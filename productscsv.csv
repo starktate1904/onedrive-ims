@@ -1,0 +1,21 @@
+name,make,model,description,price,quantity,branch_id,category_id
+Front Bumper,Nissan,Skyline GT-R,OEM replacement part,500,5,1,2
+Headlight,Honda,Civic,OEM replacement part,30,5,1,2
+Taillight,Toyota,Corolla,OEM replacement part,50,5,1,2
+Radiator,Mazda,Mazda3,OEM replacement part,150,5,1,13
+Engine,Subaru,Forester,OEM replacement part,1000,5,1,1
+Transmission,Volkswagen,Golf,OEM replacement part,1700,5,1,7
+Brake Pads,BMW,3 Series,OEM replacement part,200,5,1,6
+Tires,Mercedes-Benz,C-Class,OEM replacement part,500,5,1,4
+Battery,Audi,A4,OEM replacement part,120,5,1,9
+Exhaust system,Porsche,Cayenne,OEM replacement part,500,5,1,11
+Suspension,Toyota,Corolla,OEM replacement part,300,5,1,5
+Steering Wheel,Honda,Civic,OEM replacement part,60,5,1,8
+Interior Trim,Nissan,Skyline GT-R,OEM replacement part,500,5,1,3
+Door Panel,Mazda,Mazda3,OEM replacement part,10,5,1,2
+Hood,Subaru,Forester,OEM replacement part,500,5,1,2
+Fender,Volkswagen,Golf GTI,OEM replacement part,100,5,1,2
+Mirror,BMW,3 Series,OEM replacement part,180,5,1,2
+Windshield,Mercedes-Benz,C-Class,OEM replacement part,300,5,1,2
+Sensor,Audi,A4,OEM replacement part,200,5,1,9
+ECU,Porsche,Cayenne,OEM replacement part,100,5,1,9

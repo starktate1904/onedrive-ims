@@ -1,0 +1,173 @@
+<!-- Modal -->
+<div class="modal fade" id="message-modal-2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm" role="document"> <!-- Use modal-sm for small size -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-center" id="exampleModalLabel">Message</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body" id="message-body">
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'success' %}
+              <div class="alert alert-success">
+                <i class="fas fa-check-circle fa-2x text-success" aria-hidden="true"></i> <!-- Smaller icon -->
+                {{ message }}
+              </div>
+            {% elif message.tags == 'error' %}
+              <div class="alert alert-danger">
+                <i class="fa fa-times-circle-o fa-2x" aria-hidden="true"></i> <!-- Smaller icon -->
+                {{ message }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <p>No messages to display.</p>
+        {% endif %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> <!-- Added close button -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- JavaScript to show the modal -->
+<script>
+  $(document).ready(function() {
+    // Show the loader initially
+    $('#loader').show();
+  
+    // Simulate the loading process (replace with your actual loading logic)
+    setTimeout(function() {
+      // Hide the loader
+      $('#loader').hide();
+  
+      // Check if there are any messages
+      if ($('#message-body').find('.alert').length > 0) {
+        // Show the modal
+        $('#message-modal-2').modal('show');
+  
+        // Hide the modal after 3 seconds
+        setTimeout(function() {
+          $('#message-modal-2').modal('hide');
+        }, 2000);
+      }
+    }, 2000); // adjust the timeout to match your loading time
+  });
+</script>
+
+<style>
+ /* Modal styles */
+.modal {
+  text-align: center;
+  padding: 0 !important;
+}
+
+.modal .modal-dialog {
+  width: 300px; /* Adjusted width for smaller size */
+  transition: transform 0.3s ease-in-out;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border-radius: 10px;
+}
+
+.modal .modal-content {
+  background-color: #fff;
+  border: none;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal .modal-header {
+  background-color: #333;
+  color: #fff;
+  border-bottom: none;
+  padding: 10px; /* Reduced padding */
+  text-align: center;
+  border-radius: 10px 10px 0 0;
+}
+
+.modal .modal-header .modal-title {
+  font-weight: bold;
+  font-size: 16px; /* Reduced font size */
+}
+
+.modal .modal-body {
+  padding: 10px; /* Reduced padding */
+}
+
+.modal .modal-body .alert {
+  margin-bottom: 10px; /* Reduced margin */
+  padding: 10px; /* Reduced padding */
+  border-radius: 5px; /* Reduced border radius */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.modal .modal-body .alert-success {
+  background-color: #dff0d8;
+  border-color: #d6e9c6;
+  color: #3e8e41;
+}
+
+.modal .modal-body .alert-danger {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #a94442;
+}
+
+.modal .modal-body .alert i {
+  font-size: 20px; /* Smaller icon size */
+  margin-right: 5px; /* Reduced margin */
+}
+
+.modal .modal-footer {
+  background-color: #333;
+  color: #fff;
+  border-top: none;
+  padding: 5px; /* Reduced padding */
+  text-align: center;
+  border-radius: 0 0 10px 10px;
+}
+
+.modal .modal-footer .btn {
+  background-color: #337ab7;
+  color: #fff;
+  border: none;
+  padding: 5px 10px; /* Reduced padding */
+  font-size: 14px; /* Reduced font size */
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.modal .modal-footer .btn:hover {
+  background-color: #23527c;
+}
+
+/* Animation styles */
+.modal.fade .modal-dialog {
+  transform: scale(0.5);
+  opacity: 0;
+}
+
+.modal.fade.show .modal-dialog {
+  transform: scale(1);
+  opacity: 1;
+}
+
+.modal.fade.show .modal-dialog {
+  animation: bounceIn 0.5s;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.5);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+</style>

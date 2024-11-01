@@ -1,0 +1,289 @@
+{% load static %}
+{% include 'scripts/links.html' %}
+{% include 'scripts/scripts.html' %}
+
+
+<style>
+   
+   
+
+    #accordionSidebar{
+
+        background-color: rgb(196, 69, 90);
+        
+    }
+    #logo{
+        width: 40px;
+        height: 40px;
+    }
+
+
+</style>
+
+
+<ul class="navbar-nav bg-gradient sidebar sidebar-dark accordion" id="accordionSidebar">
+       
+
+    <!-- Sidebar - Brand -->
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="">
+        <div class="sidebar-brand-icon ">
+            <img src="{% static 'img/logo.png' %}" alt="" id="logo">
+            
+        </div>
+        <div class="sidebar-brand-text mx-3">OneDrive</div>
+    </a>
+
+   
+
+   
+
+    <!-- Divider -->
+    <hr class="sidebar-divider my-0">
+
+{% if user.is_authenticated   %}
+    <!-- Nav Item - Dashboard -->
+    {% if user.role == 'admin' %}
+    <li class="nav-item active">
+        <a class="nav-link" href="{% url 'auth_pos:admin_dashboard' %}">
+            <i class="fas fa-fw fa-tachometer-alt  text-black-400"></i>
+            <span> Admin Dashboard</span></a>
+    </li>
+    {% elif user.role == 'manager' %}
+       <!-- Nav Item - Dashboard -->
+       <li class="nav-item active">
+        <a class="nav-link" href="{% url 'auth_pos:manager_dashboard' %}">
+            <i class="fas fa-fw fa-tachometer-alt  text-black-400"></i>
+            <span>Manager Dashboard</span></a>
+    </li>
+    {% else %}
+      <!-- Nav Item - Dashboard -->
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'auth_pos:cashier_dashboard' %}">
+            <i class="fas fa-fw fa-tachometer-alt  text-black-400"></i>
+            <span>POS</span>
+            <span>{{branch.name}}</span>
+        </a>
+    </li>
+    {% endif %}
+{% endif %}
+
+
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Interface
+    </div>
+
+
+{% if user.is_authenticated   %}
+    <!-- Nav Item - Pages Collapse Menu -->
+    {% if user.role == 'admin' %}
+    <li class="nav-item {% if active_nav_item == 'products' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'products:product_list' %}"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-car  text-black-400"></i>
+            <span>Products Management</span>
+        </a>
+        
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item {% if active_nav_item == 'branches' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'branches:branch_list' %}" >
+            <i class="fas fa-building  text-black-400"></i>
+            <span>Branch Management</span>
+        </a>
+      
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item {% if active_nav_item == 'staff' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'staffs:employee_list' %}" >
+            <i class="fas fa-people-carry  text-black-400"></i>
+            <span>Staff Management</span>
+        </a>
+      
+    </li>
+
+     <!-- Nav Item - Utilities Collapse Menu -->
+     <li class="nav-item {% if active_nav_item == 'sales' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'auth_pos:admin_sale_list' %}"  data-target="#collapseUtilities"
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-calendar  text-black-400"></i>
+            <span> Sales Reports </span>
+        </a>
+      
+    </li>
+
+    {% elif user.role == 'manager' %}
+    <li class="nav-item {% if active_nav_item == 'branches' %}active{% endif %}">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-building  text-black-400"></i>
+            <span>Branch Management </span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{% url 'branches:view_branch_products' %}">Branch Products</a>     
+                <a class="collapse-item" href="{% url 'auth_pos:manager_sale_list' %}">Branch  Sales Reports</a>
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item {% if active_nav_item == 'staff' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'branches:view_branch_employees' %}" 
+            aria-expanded="true" aria-controls="collapseUtilities">
+            <i class="fas fa-people-carry  text-black-400"></i>
+            <span>Branch Staff Management</span>
+        </a>
+       
+    </li>
+
+
+
+    {% else %}
+    <li class="nav-item {% if active_nav_item == 'pos' %}active{% endif %}" >
+        <a class="nav-link collapsed" href="" data-toggle="collapse" data-target="#collapseTwo"
+            aria-expanded="true" aria-controls="collapseTwo">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Sales</span>
+        </a>
+        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{% url 'pos:create_sale' %}" id="pos">New Sale</a>
+                <a class="collapse-item" href="{% url 'pos:sale_list' %}" id="pos">Sales List</a>
+
+                
+            </div>
+        </div>
+    </li>
+
+    <!-- Nav Item - Utilities Collapse Menu -->
+    <li class="nav-item {% if active_nav_item == 'products' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'pos:view_pos_products' %}">
+            <i class="fa fa-cubes"></i>
+            <span>Products</span>
+        </a>
+      
+    </li>
+
+   
+    {% endif %}
+
+
+
+
+    <!-- Divider -->
+    <hr class="sidebar-divider">
+
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Settings
+    </div>
+
+    <!-- Nav Item - Pages Collapse Menu -->
+    <li class="nav-item {% if active_nav_item == 'profile' %}active{% endif %}">
+        <a class="nav-link collapsed" href="{% url 'profile:profile_detail' user.pk %}"
+            aria-expanded="true" aria-controls="collapsePages">
+            <i class="fas fa-user  text-black-400"></i>
+            <span>Profile</span>
+        </a>
+       
+    </li>
+
+     <!-- Divider -->
+     <hr class="sidebar-divider d-none d-md-block">
+
+
+    <!-- Sidebar Toggler (Sidebar) -->
+    <div class="text-center ">
+        <!-- Logout button -->
+        <a href="" data-bs-toggle="modal" data-bs-target="#logoutModal" 
+        class="btn btn-danger btn-circle btn-md  "><i class="fas fa-sign-out-alt"></i>
+      </a>
+ 
+    </div>
+
+
+</li>
+
+ <!-- Divider -->
+ <hr class="sidebar-divider d-none d-md-block">
+
+
+
+<!-- Sidebar Toggler (Sidebar) -->
+<div class="text-center d-none d-md-inline">
+    <button class="rounded-circle border-0" id="sidebarToggle"></button>
+</div>
+
+</ul>
+
+
+
+
+{% endif  %}
+
+  
+
+</ul>
+
+
+    <!-- Logout modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Logout Confirmation</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Your session will be closed in 5 seconds.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <a href="{% url 'auth_pos:logout' %}" class="btn btn-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+{% block javascripts %}
+<script>
+ 
+    
+        // Function to toggle sidebar visibility
+        function toggleSidebar() {
+         const sidebar = document.getElementById('accordionSidebar');
+         if (sidebar.style.display === 'none' || sidebar.style.display === '') {
+             sidebar.style.display = 'block'; // Show sidebar
+         } else {
+             sidebar.style.display = 'none'; // Hide sidebar
+         }
+     }
+ 
+ 
+     var lockScreenUrl = "{% url 'auth_pos:lock_screen' %}";
+     $('#logoutModal').on('shown.bs.modal', function () {
+         var count = 5;
+         var counter = setInterval(function() {
+             count--;
+             document.getElementById("timer").innerHTML = "Your session will be closed in " + count + " seconds.";
+             if (count === 0) {
+                 clearInterval(counter);
+                 $('#logoutModal').modal('hide');
+                 window.location.href = lockScreenUrl;
+             }
+         }, 1000);
+     });
+</script>
+{% endblock javascripts %}
+ 

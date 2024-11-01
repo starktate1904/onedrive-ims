@@ -1,0 +1,751 @@
+{% block content %}
+{% load static %}
+
+
+ <!-- Page Heading -->
+ <div class="d-sm-flex align-items-center justify-content-between mb-5" id="pageheading">
+    <div class="d-flex align-items-center">
+      
+        <h1 class="h3 mb-0 text-black-900 ml-3  text-uppercase" id="greeting">{{ greeting}} {{ user.first_name }}</h1> 
+        <p class="h3 mb-0 text-black-900 ml-3  text-uppercase " id="today">Today is <b>{{ today }}</b></p>
+    </div>
+  
+    
+</div>
+
+<!-- Content Row -->
+<div class="row">
+
+     <!-- Earnings (Monthly) Card  -->
+     <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-primary shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                           {{branch.name}} Avg Earning per Month</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{avg_month}} $</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-calendar fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Earnings (Annua) Card  -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                           {{branch.name}} Earnings (Annual)</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{annual_earnings}} $</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <!-- Employees Card -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-info shadow h-100 py-2">
+            <a href="{% url 'branches:view_branch_employees' %}">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{branch.name}} Employees
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{branch_employees_count}}</div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-people-carry fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Products-->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-warning shadow h-100 py-2">
+            <a href="{% url 'branches:view_branch_products' %}">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">{{branch.name}}
+                            Products</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{branch_products_count}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-car fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div>
+    </div>
+</div>
+
+
+<!-- container row -->
+<div class="row">
+
+  
+
+    <!-- sales Card  -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-success shadow h-100 py-2">
+            <a href="{% url 'auth_pos:manager_sale_list' %}">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight -bold text-success text-uppercase mb -1">{{branch.name}}
+                             Total Sales</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{total_sales}}</div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-dollar-sign fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </a>
+        </div>
+    </div>
+
+    <!-- Revenue Card -->
+    <div class="col-xl-3 col-md-6 mb-5">
+        <div class="card border-left-info shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Revenue
+                        </div>
+                        <div class="row no-gutters align-items-center">
+                            <div class="col-auto">
+                                <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{total_revenue}} $</div>
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="fas fa-balance-scale fa-2x text-black-400"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+</div>
+
+
+
+<!-- Content Row -->
+<div class="row">
+
+    <!-- Area Chart -->
+    <div class="col-xl-7 col-lg-7">
+        <div class="card shadow mb-5">
+            <!-- Card Header - Dropdown -->
+            <div
+                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                <h6 class="m-0 font-weight-bold text-primary">Year Earnings Overview</h6>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+                <div class="chart-area">
+                    <canvas id="myAreaChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calender Card -->
+    <div class="col-xl-5 col-lg-6">
+        <div class="card border-left-danger shadow py-2">
+            <div class="card-body">
+                <section class="ftco-section table-responsive">
+                    <div class="container-fluid">
+                       
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="elegant-calencar d-md-flex">
+                                    <div class="wrap-header d-flex align-items-center">
+                                        <p id="reset" class="reset-btn"><i class="fas fa-sync-alt"></i> Reset</p>
+                                        <div id="header" class="p-0">
+                                            <div class="pre-button d-flex align-items-center justify-content-center"><i class="fas fa-chevron-left"></i></div>
+                                            <div class="head-info">
+                                                <div class="head-day"></div>
+                                                <div class="head-month"></div>
+                                            </div>
+                                            <div class="next-button d-flex align-items-center justify-content-center"><i class="fas fa-chevron-right"></i></div>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-wrap">
+                                        <table id="calendar">
+                                            <thead>
+                                                <tr>
+                                                    <th><i class="fas fa-sun"></i> Sun</th>
+                                                    <th><i class="fas fa-moon"></i> Mon</th>
+                                                    <th><i class="fas fa-star"></i> Tue</th>
+                                                    <th><i class="fas fa-umbrella"></i> Wed</th>
+                                                    <th><i class="fas fa-cloud"></i> Thu</th>
+                                                    <th><i class="fas fa-bolt"></i> Fri</th>
+                                                    <th><i class="fas fa-snowflake"></i> Sat</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                                <tr>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+ 
+</div>
+
+
+<style>
+    /* General styles for the calendar card */
+.elegant-calencar {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.wrap-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
+.calendar-wrap {
+    overflow-x: auto; /* Allow horizontal scrolling on small screens */
+}
+
+#calendar {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#calendar th, #calendar td {
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #ddd; /* Add border for better visibility */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .wrap-header {
+        flex-direction: column; /* Stack header elements on smaller screens */
+        align-items: flex-start; /* Align items to the start */
+    }
+
+    .head-info {
+        margin: 10px 0; /* Add margin for spacing */
+    }
+
+    #calendar th, #calendar td {
+        padding: 5px; /* Reduce padding for smaller screens */
+        font-size: 0.8em; /* Adjust font size */
+    }
+}
+
+@media (max-width: 576px) {
+    #calendar th, #calendar td {
+        padding: 3px; /* Further reduce padding for very small screens */
+        font-size: 0.7em; /* Further adjust font size */
+    }
+
+    .reset-btn {
+        font-size: 0.8em; /* Adjust reset button font size */
+    }
+}
+    a:hover {
+        color: rgb(199, 124, 124);
+        
+        
+      }
+      
+    
+    a{
+        color: rgba(109, 108, 108, 0.856);
+        
+    }
+    .ftco-section {
+        width: auto;
+    }
+    
+    .elegant-calencar {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgb(196, 69, 90);
+        overflow: hidden; /* Prevent overflow */
+    }
+    
+    .wrap-header {
+        background-color: rgb(196, 69, 90);
+        color: #0e0909;
+        border-bottom: 1px solid #333 ;
+        font-family: cursive;
+        font-size: large;
+        padding: 10px; /* Add padding for better alignment */
+    }
+    
+    .wrap-header .pre-button, .wrap-header .next-button {
+        width: 30px;
+        height: 30px;
+        background-color: rgb(196, 69, 90);
+        color: #4ab16c;
+        border: none;
+        padding: 10px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    
+    .wrap-header .pre-button:hover, .wrap-header .next-button:hover {
+        background-color: rgb(196, 69, 90);
+    }
+    
+    .head-info {
+        padding: 10px;
+        font-size: 18px;
+        font-weight: bold;
+    }
+    
+    .head-day, .head-month {
+        display: inline-block;
+        margin-right: 10px;
+    }
+    
+    .calendar-wrap {
+        padding: 20px;
+        display: flex; /* Use Flexbox for alignment */
+        justify-content: center; /* Center the calendar */
+    }
+    
+    #calendar {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    
+    #calendar thead th {
+        background-color: rgb(196, 69, 90);
+        color: #fff;
+        padding: 10px;
+        border: 1px solid #333;
+    }
+    
+    #calendar tbody td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        cursor: pointer;
+    }
+    
+    #calendar tbody td:hover {
+        background-color: #f0f0f0;
+    }
+    
+    #calendar tbody td.selected {
+        background-color: #bb5c5c;
+        color: #fff;
+    }
+    
+    .reset-btn {
+        background-color: rgb(196, 69, 90);
+        color: #fff;
+        padding: 10px 20px;
+        border: none;
+        font-size: 16px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    
+    .reset-btn:hover {
+        background-color: #444;
+    }
+    
+    /* Added styles for Font Awesome icons */
+    .fas {
+        
+        margin-right: 5px;
+    }
+    
+    .fas.fa-sun, .fas.fa-moon, .fas.fa-star, .fas.fa-umbrella, .fas.fa-cloud, .fas.fa-bolt, .fas.fa-snowflake {
+        color: #fff;
+    }
+    
+    /* Added animations and effects */
+    .elegant-calencar {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .elegant-calencar:hover {
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .wrap-header {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .wrap-header:hover {
+        background-color: #444;
+    }
+    
+    .pre-button, .next-button {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .pre-button:hover, .next-button:hover {
+        transform: scale(1.1);
+    }
+    
+    .head-info {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .head-info:hover {
+        transform: scale(1.1);
+    }
+    
+    #calendar thead th {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    #calendar thead th:hover {
+        background-color: #444;
+    }
+    
+    #calendar tbody td {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    #calendar tbody td:hover {
+        transform: scale(1.1);
+    }
+    
+    .reset-btn {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .reset-btn:hover {
+        transform: scale(1.1);
+    }
+    .profile-picture {
+ 
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+      }
+    #greeting{
+        color:  rgb(96, 129, 206);
+        margin-right: 10px;
+
+    }
+    #today{
+        color: rgb(96, 129, 206);
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    #pageheading{
+        margin-left: 10%;
+        margin-top: 20px;
+        margin-right: 10px;
+       
+    }
+
+    .nav-item{
+        font-size: larger;
+    
+    
+    }
+    .card{
+        border-radius: 30px;
+    }
+    
+    
+    
+</style>
+
+
+
+
+
+
+
+{% block javascripts %}
+
+<script>
+
+
+    (function($) {
+
+        "use strict";
+    
+        document.addEventListener('DOMContentLoaded', function(){
+        var today = new Date(),
+            year = today.getFullYear(),
+            month = today.getMonth(),
+            monthTag =["January","February","March","April","May","June","July","August","September","October","November","December"],
+            day = today.getDate(),
+            days = document.getElementsByTagName('td'),
+            selectedDay,
+            setDate,
+            daysLen = days.length;
+    // options should like '2014-01-01'
+        function Calendar(selector, options) {
+            this.options = options;
+            this.draw();
+        }
+        
+        Calendar.prototype.draw  = function() {
+            this.getCookie('selected_day');
+            this.getOptions();
+            this.drawDays();
+            var that = this,
+                reset = document.getElementById('reset'),
+                pre = document.getElementsByClassName('pre-button'),
+                next = document.getElementsByClassName('next-button');
+                
+                pre[0].addEventListener('click', function(){that.preMonth(); });
+                next[0].addEventListener('click', function(){that.nextMonth(); });
+                reset.addEventListener('click', function(){that.reset(); });
+            while(daysLen--) {
+                days[daysLen].addEventListener('click', function(){that.clickDay(this); });
+            }
+        };
+        
+        Calendar.prototype.drawHeader = function(e) {
+            var headDay = document.getElementsByClassName('head-day'),
+                headMonth = document.getElementsByClassName('head-month');
+    
+                e?headDay[0].innerHTML = e : headDay[0].innerHTML = day;
+                headMonth[0].innerHTML = monthTag[month] +" - " + year;        
+         };
+        
+        Calendar.prototype.drawDays = function() {
+            var startDay = new Date(year, month, 1).getDay(),
+    //      下面表示这个月总共有几天
+                nDays = new Date(year, month + 1, 0).getDate(),
+        
+                n = startDay;
+    //      清除原来的样式和日期
+            for(var k = 0; k <42; k++) {
+                days[k].innerHTML = '';
+                days[k].id = '';
+                days[k].className = '';
+            }
+    
+            for(var i  = 1; i <= nDays ; i++) {
+                days[n].innerHTML = i; 
+                n++;
+            }
+            
+            for(var j = 0; j < 42; j++) {
+                if(days[j].innerHTML === ""){
+                    
+                    days[j].id = "disabled";
+                    
+                }else if(j === day + startDay - 1){
+                    if((this.options && (month === setDate.getMonth()) && (year === setDate.getFullYear())) || (!this.options && (month === today.getMonth())&&(year===today.getFullYear()))){
+                        this.drawHeader(day);
+                        days[j].id = "today";
+                    }
+                }
+                if(selectedDay){
+                    if((j === selectedDay.getDate() + startDay - 1)&&(month === selectedDay.getMonth())&&(year === selectedDay.getFullYear())){
+                    days[j].className = "selected";
+                    this.drawHeader(selectedDay.getDate());
+                    }
+                }
+            }
+        };
+        
+        Calendar.prototype.clickDay = function(o) {
+            var selected = document.getElementsByClassName("selected"),
+                len = selected.length;
+            if(len !== 0){
+                selected[0].className = "";
+            }
+            o.className = "selected";
+            selectedDay = new Date(year, month, o.innerHTML);
+            this.drawHeader(o.innerHTML);
+            this.setCookie('selected_day', 1);
+            
+        };
+        
+        Calendar.prototype.preMonth = function() {
+            if(month < 1){ 
+                month = 11;
+                year = year - 1; 
+            }else{
+                month = month - 1;
+            }
+            this.drawHeader(1);
+            this.drawDays();
+        };
+        
+        Calendar.prototype.nextMonth = function() {
+            if(month >= 11){
+                month = 0;
+                year =  year + 1; 
+            }else{
+                month = month + 1;
+            }
+            this.drawHeader(1);
+            this.drawDays();
+        };
+        
+        Calendar.prototype.getOptions = function() {
+            if(this.options){
+                var sets = this.options.split('-');
+                    setDate = new Date(sets[0], sets[1]-1, sets[2]);
+                    day = setDate.getDate();
+                    year = setDate.getFullYear();
+                    month = setDate.getMonth();
+            }
+        };
+        
+         Calendar.prototype.reset = function() {
+             month = today.getMonth();
+             year = today.getFullYear();
+             day = today.getDate();
+             this.options = undefined;
+             this.drawDays();
+         };
+        
+        Calendar.prototype.setCookie = function(name, expiredays){
+            if(expiredays) {
+                var date = new Date();
+                date.setTime(date.getTime() + (expiredays*24*60*60*1000));
+                var expires = "; expires=" +date.toGMTString();
+            }else{
+                var expires = "";
+            }
+            document.cookie = name + "=" + selectedDay + expires + "; path=/";
+        };
+        
+        Calendar.prototype.getCookie = function(name) {
+            if(document.cookie.length){
+                var arrCookie  = document.cookie.split(';'),
+                    nameEQ = name + "=";
+                for(var i = 0, cLen = arrCookie.length; i < cLen; i++) {
+                    var c = arrCookie[i];
+                    while (c.charAt(0)==' ') {
+                        c = c.substring(1,c.length);
+                        
+                    }
+                    if (c.indexOf(nameEQ) === 0) {
+                        selectedDay =  new Date(c.substring(nameEQ.length, c.length));
+                    }
+                }
+            }
+        };
+        var calendar = new Calendar();
+        
+            
+    }, false);
+    
+    })(jQuery);
+    
+
+
+
+</script>
+<!--Chart JS-->
+<script src="{% static 'chart.js/Chart.min.js' %}"></script>
+<!--Monthly earnings variable-->
+<input type="hidden" id="monthly_earnings"  value="{{monthly_earnings|safe}}">
+
+<!--Chart area-->
+<script src="{% static 'chart.js/manager_chart_area.js' %}"></script>
+<!--Chart pie-->
+<script src="{% static 'chart.js/manager_chart_pie.js' %}"></script>
+{% endblock javascripts %}
+
+
+
+
+
+{% endblock content %}

@@ -1,0 +1,141 @@
+{% load static %}
+
+<style>
+  .modal-receipt {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    max-width: 100%; /* Ensures it doesn't exceed modal width */
+    overflow: auto; /* Allows scrolling if content is too large */
+  }
+
+  .receipt {
+    width: 100%; /* Make it responsive */
+    max-width: 800px; /* Set a maximum width */
+    margin: 0 auto; /* Center the receipt */
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .receipt-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .receipt-header img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+
+  .receipt-body {
+    margin-bottom: 20px;
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th, .table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+
+  .table thead th {
+    background-color: #f0f0f0;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .text-danger {
+    color: #dc3545;
+  }
+
+  h2 {
+    font-weight: bold;
+    margin-top: 0;
+  }
+
+  h5 {
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin-bottom: 10px;
+  }
+</style>
+
+<div class="modal-receipt">
+  <div class="receipt">
+    <div class="receipt-header">
+      <img src="{% static 'img/logo.png' %}" alt="Logo" width="50" height="50">
+      <h5>OneDrive.</h5>
+      <p>+263 718910821<i class="fa fa-phone"></i></p>
+      <p>info@onedrive.com <i class="fa fa-envelope-o"></i></p>
+      <p>Harare, Zimbabwe <i class="fa fa-location-arrow"></i></p>
+    </div>
+
+    <div class="receipt-body">
+      <h5>Sale ID: <small>{{ sale.id }}</small></h5>
+      <p><b>Date :</b>{{ sale.date_created }}</p>
+      <p><b>Cashier:</b>{{employee.user.first_name}} {{employee.user.last_name}}</p>
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in sale_items %}
+          <tr>
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.total }}</td>
+            <td><i class="fa fa-inr"></i>{{ item.product.price }}</td>
+          </tr>
+          {% endfor %}
+          <tr>
+            <td colspan="3" class="text-right">
+              <p>
+                <strong>Total Amount: {{ sale.total_amount }}</strong>
+              </p>
+              <p>
+                <strong>Amount Paid: {{ amount_paid }}</strong>
+              </p>
+              <p>
+                <strong>Change: {{ change }}</strong>
+              </p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" class="text-right">
+              <h2><strong>Total: </strong></h2>
+            </td>
+            <td class="text-left text-danger">
+              <h2><strong><i class="fa fa-inr"></i>{{ sale.total_amount }}</strong></h2>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><b>Date :</b>{{ today }}</p>
+      < h5 style="color: rgb(140, 140, 140);">Thank you for doing business with us.!</h5>
+    </div>
+  </div>
+</div>

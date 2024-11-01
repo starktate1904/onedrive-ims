@@ -1,0 +1,210 @@
+{% extends 'dashboard/admin_dashboard.html' %}
+{% block content %}
+
+{% include 'scripts/messages.html' %}
+{% include 'scripts/main_loader.html' %}
+
+<!-- Page Title -->
+<div class="pagetitle">
+    <h1 class="h5 text-md font-weight-bold text-primary text-uppercase mb-1">Products in {{ branch.name }} Branch</h1>
+    <h2 class="h5 text-md font-weight-bold text-primary text-uppercase mb-1">Has <span class="badge badge-success">{{ branch_products_count }}</span> Products</h2>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'auth_pos:admin_dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'branches:branch_list' %}">{{ branch.name }} Branch</a></li>
+            <li class="breadcrumb-item active"><a href="{% url 'branches:branch_products' branch.id %}">Products</a></li>
+        </ol>
+    </nav>
+</div><!-- End Page Title -->
+
+<!-- Indoc Styling -->
+<style>
+    .breadcrumb {
+        background-color: white;
+        border-radius: 30px;
+    }
+
+    .pagetitle {
+        margin: 30px 20px;
+    }
+
+    #productlist {
+        width: 100%; /* Use full width */
+        border-radius: 50%;
+    }
+
+    #cardtable {
+        margin: 20px;
+    }
+
+    #tablehead {
+        background-color: rgb(206, 96, 114);
+        color: white;
+    }
+
+    #navbarSearch {
+        margin-top: 5px;
+        margin-left: 2px;
+    }
+
+    .nav-item {
+        margin-right: 5px;
+    }
+
+    #pqty {
+        margin: 5px 0;
+    }
+
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+        .table-responsive {
+            overflow-x: auto; /* Allow horizontal scrolling on small screens */
+        }
+
+        .pagination {
+            flex-wrap: wrap; /* Allow pagination items to wrap */
+            justify-content: center; /* Center the pagination */
+        }
+
+        .page-item {
+            margin: 0 2px; /* Add some margin between items */
+        }
+
+        .nav-tabs {
+            flex-direction: column; /* Stack tabs vertically on small screens */
+        }
+
+        .nav-link {
+            text-align: center; /* Center align text in nav links */
+        }
+
+        #searchBar {
+            width: 100%; /* Full width for search bar */
+        }
+
+        #searchBar .form-control {
+            width: calc(100% - 40px); /* Adjust width for button */
+        }
+
+        #searchBar .input-group-append {
+            width: 40px; /* Fixed width for button */
+        }
+    }
+
+    @media (max-width: 576px) {
+        .pagetitle h1, .pagetitle h2 {
+            font-size: 1.2rem; /* Adjust font size for smaller screens */
+        }
+
+        #cardtable {
+            margin: 10px; /* Reduce margin on smaller screens */
+        }
+    }
+</style>
+<!-- End Styling -->
+
+<!-- Product List -->
+<section class="section profile">
+    <div class="row">
+        <div class="col-12 col-md-12 col-lg-12 col-xl-12">
+            <div class="card border-left-success shadow h-100 py-2" id="cardtable">
+                <div class="card-body pt-3">
+                    <!-- Bordered Tabs -->
+                    <ul class="nav nav-tabs nav-tabs-bordered">
+                        <li class="nav-item">
+                            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-overview">Products</button>
+                        </li>
+                        <li class="nav-item">
+                            <!-- Topbar Search -->
+                            <form method="get" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+                                <div class="input-group" id="searchBar">
+                                    <input type="text" class="form-control bg-light border-0 small" placeholder="Search Products..."
+                                           aria-label="Search" name="search" aria-describedby="basic-addon2">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">
+                                            <i class="fas fa-search fa-sm"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </ li>
+                    </ul>
+                    <div class="tab-content pt-2">
+                        <div class="tab-pane fade show active profile-overview border-left-danger shadow h-100 py-2" id="profile-overview">
+                            <div class="card-body">
+                                <div class="table-responsive table-borderless table-hover table-responsive-sm table-responsive-md table-responsive-lg table-striped">
+                                    <table class="table" id="dataTable" width="100%" cellspacing="1">
+                                        <thead id="tablehead">
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Category</th>
+                                                <th>Name</th>
+                                                <th>location</th>
+                                                <th>Car Make</th>
+                                                <th>Car Model</th>
+                                                <th>Quantity</th>
+                                                <th>Price</th>
+                                            </tr>
+                                        </thead>
+                                        {% if products %}
+                                        <tbody>
+                                            {% for product in products %}
+                                            <tr>
+                                                <td>{{ product.id }}</td>
+                                                <td>{{ product.category }}</td>
+                                                <td>{{ product.name }}</td>
+                                                <td>{{ product.location }}</td>
+                                                <td>{{ product.make }}</td>
+                                                <td>{{ product.model }}</td>
+                                                <td id="pqty">
+                                                  {% if product.quantity < 3 %}
+                                                      <span class="badge badge-danger">{{ product.quantity }} Low Stock</span>
+                                                  {% else %}
+                                                      <span class="badge badge-success">{{ product.quantity }} In Stock</span>
+                                                  {% endif %}
+                                              </td>
+                                              <td>{{ product.price }}</td>
+                                              
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        {% else %}
+                                        <tbody>
+                                            <tr>
+                                                <td colspan="9" class="text-center">No Products found !.
+                                                    <b>Go to Product management to add products to this branch</b></td>
+                                            </tr>
+                                        </table>
+                                        {% endif %}
+                                    </div>
+                                    <nav aria-label="Page navigation example" class="mt-4">
+                                      <ul class="pagination justify-content-end">
+                                          {% if products.has_previous %}
+                                          <li class="page-item">
+                                              <a class="page-link" href="?page={{ products.previous_page_number }}&search={{ search }}">Previous</a>
+                                          </li>
+                                          {% endif %}
+                                  
+                                          <li class="page-item disabled">
+                                              <span class="page-link">Page {{ products.number }} of {{ products.paginator.num_pages }}</span>
+                                          </li>
+                                  
+                                          {% if products.has_next %}
+                                          <li class="page-item">
+                                              <a class="page-link" href="?page={{ products.next_page_number }}&search={{ search }}">Next</a>
+                                          </li>
+                                          {% endif %}
+                                      </ul>
+                                  </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- End Bordered Tabs -->
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Product List -->
+
+{% endblock content %}
